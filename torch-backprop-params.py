@@ -36,6 +36,7 @@ def L63_torch_modified(t, S, eta, sigma=10.0, rho=28.0, beta=8.0/3):
     return dS
 
 
+
 # OptimizeLorenz and code using it adapted from examples by the makers
 # of torchdiffeq, in particular, the one which can be found at 
 # https://github.com/rtqichen/torchdiffeq/blob/master/examples/ode_demo.py
@@ -65,7 +66,11 @@ if __name__ == '__main__':
     max_it = 100
 
     x0 = torch.tensor([8.0, 0.0, 30.0]).to(device)
+    x0.requires_grad_()
+
     t_space = torch.linspace(0, 10, 1000).to(device)
+    
+    
 
     with torch.no_grad():
         true_eta = torch.tensor([[0, 0.03], [0, 0], [0.05, 0]], dtype=torch.float)
@@ -78,12 +83,11 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam([optlor.eta])
     loss = torch.nn.MSELoss().to(device)
 
-    x0.requires_grad_()
 
-
+    np.set_printoptions(precision=4)
     for it in range(max_it):
-        print(it)
-        print(optlor.eta)
+        print('Iterarion {}'.format(it+1))
+        print('eta = \n{}'.format(optlor.eta.detach().numpy()))
         print('\n')
         
         optimizer.zero_grad()
