@@ -73,14 +73,14 @@ if __name__ == '__main__':
     
 
     with torch.no_grad():
-        true_eta = torch.tensor([[0, 0.03], [0, 0], [0.05, 0]], dtype=torch.float)
+        true_eta = torch.tensor([[0, 0.003], [0, 0], [0.005, 0]], dtype=torch.float)
         true_l63 = lambda t, x : L63_torch_modified(t, x, true_eta)
         true_soln = odeint(true_l63, x0, t_space)
         
     optlor = OptimizeLorenz(x0, t_space, 2).to(device)
     eta0 = torch.tensor(np.random.normal(0, 0.01, (3,2)), dtype=torch.float).to(device)
 
-    optimizer = torch.optim.Adam([optlor.eta])
+    optimizer = torch.optim.Adam([optlor.eta])#, lr=1e-7)
     loss = torch.nn.MSELoss().to(device)
 
 
@@ -88,9 +88,11 @@ if __name__ == '__main__':
     for it in range(max_it):
         print('Iterarion {}'.format(it+1))
         print('eta = \n{}'.format(optlor.eta.detach().numpy()))
+        if it >= 1:
+            print('loss = {}'.format(loss_curr))
         print('\n')
         
-        optimizer.zero_grad()
+        # optimizer.zero_grad()
     
         pred_soln = odeint(optlor, x0, t_space).to(device)
         
