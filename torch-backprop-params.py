@@ -97,12 +97,21 @@ if __name__ == '__main__':
         loss_curr.retain_grad()
         loss_curr.backward()
 
+        if it > 0:
+            for i in range(optlor.eta.shape[0]):
+                for j in range(optlor.eta.shape[1]):
+                    print('Backprop Derivative for {},{} = {:0f}'.format(i, j, optlor.eta.grad[i,j]))
+                    print('Checked Derivative for {},{} = {:0f}\n'.format(i, j, grad_check[i,j]))
+            raise
+        print('\n')
+
         print('Iterarion {}'.format(it+1))
         print('eta = \n{}'.format(optlor.eta.detach().numpy()))
         print('loss = {}\n'.format(loss_curr))
         loss_vec.append(loss_curr.detach().numpy())
         print('===Derivative Check===')
 
+        grad_check = np.zeros((optlor.eta.shape[0], optlor.eta.shape[1]))
         for i in range(optlor.eta.shape[0]):
             for j in range(optlor.eta.shape[1]):
                 eps = 10**(-3)
@@ -118,10 +127,8 @@ if __name__ == '__main__':
                 
                 L0 = loss(x_pred_check_0, true_soln)
                 L1 = loss(x_pred_check_1, true_soln)
-                print('Checked Derivative for {},{} = {:0f}'.format(i, j, ((L0 - L1)/(2*eps)).item()))
-                print('Backprop Derivative for {},{} = {:0f}'.format(i, j, optlor.eta.grad[i,j]))
-        print('\n')
-        raise
+                grad_check[i,j] = ((L0 - L1)/(2*eps)).item()
+        
         optimizer.step()
 
     fig, ax = plt.subplots(1,1)
