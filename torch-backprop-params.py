@@ -80,23 +80,56 @@ if __name__ == '__main__':
     optlor = OptimizeLorenz(x0, t_space, 2).to(device)
     eta0 = torch.tensor(np.random.normal(0, 0.01, (3,2)), dtype=torch.float).to(device)
 
-    optimizer = torch.optim.Adam([optlor.eta])#, lr=1e-7)
+    optimizer = torch.optim.Adam([optlor.eta], lr=1e-6)
     loss = torch.nn.MSELoss().to(device)
 
 
+    loss_vec = []
+    
     np.set_printoptions(precision=4)
     for it in range(max_it):
-        print('Iterarion {}'.format(it+1))
-        print('eta = \n{}'.format(optlor.eta.detach().numpy()))
-        if it >= 1:
-            print('loss = {}'.format(loss_curr))
-        print('\n')
-        
-        # optimizer.zero_grad()
+    
+        optimizer.zero_grad()
     
         pred_soln = odeint(optlor, x0, t_space).to(device)
         
         loss_curr = loss(pred_soln, true_soln)
+        loss_curr.retain_grad()
         loss_curr.backward()
+
+        print('Iterarion {}'.format(it+1))
+        print('eta = \n{}'.format(optlor.eta.detach().numpy()))
+        print('loss = {}\n'.format(loss_curr))
+        loss_vec.append(loss_curr.detach().numpy())
+        print('===Derivative Check===')
+
+        for i in range(optlor.eta.shape[0]):
+            for j in range(optlor.eta.shape[1]):
+                eps = 10**(-3)
+                eta_check_0 = optlor.eta.detach().clone()
+                eta_check_1 = optlor.eta.detach().clone()
+                eta_check_0[i,j] += eps
+                eta_check_1[i,j] -= eps
+        
+                l63_check_0 = lambda t, S : L63_torch_modified(t, S, eta_check_0)
+                x_pred_check_0 = odeint(l63_check_0, x0, t_space)
+                l63_check_1 = lambda t, S : L63_torch_modified(t, S, eta_check_1)
+                x_pred_check_1 = odeint(l63_check_1, x0, t_space)
+                
+                L0 = loss(x_pred_check_0, true_soln)
+                L1 = loss(x_pred_check_1, true_soln)
+                print('Checked Derivative for {},{} = {:0f}'.format(i, j, ((L0 - L1)/(2*eps)).item()))
+                print('Backprop Derivative for {},{} = {:0f}'.format(i, j, optlor.eta.grad[i,j]))
+        print('\n')
+        raise
         optimizer.step()
 
+    fig, ax = plt.subplots(1,1)
+    ax.plot(range(max_it), loss_vec)
+    ax.set_xlabel('Iterations')
+    ax.set_ylabel('MSE Loss')
+    ax.set_title('Loss as a Function of Iterations')
+    ax.set_xlim((0, max_it))
+    ax.set_ylim((0, max(loss_vec) + 10))
+    plt.grid()
+    plt.show()
