@@ -100,14 +100,16 @@ if __name__ == '__main__':
         if it > 0:
             for i in range(optlor.eta.shape[0]):
                 for j in range(optlor.eta.shape[1]):
-                    print('Backprop Derivative for {},{} = {:0f}'.format(i, j, optlor.eta.grad[i,j]))
-                    print('Checked Derivative for {},{} = {:0f}\n'.format(i, j, grad_check[i,j]))
+                    print('Backprop Derivative for {},{} = {:.2f}'.format(i, j, optlor.eta.grad[i,j]))
+                    print('Checked Derivative for {},{} = {:.2f}'.format(i, j, grad_check[i,j]))
+                    print('Error Ratio = {:.2f}'.format(optlor.eta.grad[i,j] / grad_check[i,j]))
+                    print()
             raise
         print('\n')
 
         print('Iterarion {}'.format(it+1))
         print('eta = \n{}'.format(optlor.eta.detach().numpy()))
-        print('loss = {}\n'.format(loss_curr))
+        print('loss = {:.2f}\n\n'.format(loss_curr))
         loss_vec.append(loss_curr.detach().numpy())
         print('===Derivative Check===')
 
@@ -117,6 +119,7 @@ if __name__ == '__main__':
                 eps = 10**(-3)
                 eta_check_0 = optlor.eta.detach().clone()
                 eta_check_1 = optlor.eta.detach().clone()
+                
                 eta_check_0[i,j] += eps
                 eta_check_1[i,j] -= eps
         
