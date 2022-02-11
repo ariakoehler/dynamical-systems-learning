@@ -32,13 +32,16 @@ def L63_torch_modified(t, S, eta, sigma=10.0, rho=28.0, beta=8.0/3):
 
 class OptimizeLorenz(torch.nn.Module):
 
-    def __init__(self, x0, t_space, n_terms):
+    def __init__(self, x0, t_space, n_terms, eta0=None):
         super(OptimizeLorenz, self).__init__()
         self.x0 = x0
         self.t_space = t_space
         self.n_terms = n_terms
-        
-        self.eta = torch.tensor(np.random.normal(0, 0.01, (3,self.n_terms)), dtype=torch.float).to(device)
+
+        if eta0 == None:
+            self.eta = torch.tensor(np.random.normal(0, 0.01, (3,self.n_terms)), dtype=torch.float).to(device)
+        else:
+            self.eta = eta0
         self.eta.requires_grad_()
         
 

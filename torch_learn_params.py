@@ -16,13 +16,13 @@ from torch_params_utils import *
 
 
 if __name__ == '__main__':
-    check_grad = False
+    check_grad = True
     max_it = 100
 
     x0 = torch.tensor([8.0, 0.0, 30.0]).to(device)
     x0.requires_grad_()
 
-    t_space = torch.linspace(0, 10, 1000).to(device)
+    t_space = torch.linspace(0, 10, 25).to(device)
     
     
 
@@ -30,15 +30,19 @@ if __name__ == '__main__':
         true_eta = torch.tensor([[0, 0.003], [0, 0], [0.005, 0]], dtype=torch.float)
         true_l63 = lambda t, x : L63_torch_modified(t, x, true_eta)
         true_soln = odeint(true_l63, x0, t_space)
-        
-    optlor = OptimizeLorenz(x0, t_space, 2).to(device)
-    eta0 = torch.tensor(np.random.normal(0, 0.01, (3,2)), dtype=torch.float).to(device)
+
+    # eta0 = torch.tensor(0*np.array([[0, 0.003], [0, 0], [0.005, 0]]), dtype=torch.float).to(device)
+    eta0 = torch.tensor(np.array([[3.9006e-06, 4.2233e-06], [4.0497e-06, 4.2702e-06], [-4.1567e-06, 4.1592e-06]]), dtype=torch.float).to(device)
+    optlor = OptimizeLorenz(x0, t_space, 2, eta0=eta0).to(device)
+    # eta0 = torch.tensor(np.random.normal(0, 0.001, (3,2)), dtype=torch.float).to(device)
 
     optimizer = torch.optim.Adam([optlor.eta], lr=1e-6)
     loss = torch.nn.MSELoss().to(device)
 
+    print('eta_0 = \n{}'.format(optlor.eta.detach().numpy()))
 
     loss_vec = []
+    eta_log = []
     
     np.set_printoptions(precision=4)
     for it in range(max_it):
@@ -57,13 +61,17 @@ if __name__ == '__main__':
                     for j in range(optlor.eta.shape[1]):
                         print('Backprop Derivative for {},{} = {:.2f}'.format(i, j, optlor.eta.grad[i,j]))
                         print('Checked Derivative for {},{} = {:.2f}'.format(i, j, grad_check[i,j]))
-                        print('Error Ratio = {:.2f}'.format(optlor.eta.grad[i,j] / grad_check[i,j]))
+                        # print('Error Ratio = {:.2f}'.format(optlor.eta.grad[i,j] / grad_check[i,j]))
                         print()
             print('\n')
 
         print('Iterarion {}'.format(it+1))
         print('eta = \n{}'.format(optlor.eta.detach().numpy()))
+        eta_log.append(optlor.eta.detach().numpy())
         print('loss = {:.2f}\n\n'.format(loss_curr))
+
+        if np.linalg.norm(optlor.eta.grad.detach().numpy()) < 10**-5:
+            break
         
         loss_vec.append(loss_curr.detach().numpy())
 
@@ -101,3 +109,19 @@ if __name__ == '__main__':
     ax.set_ylim((0, max(loss_vec) + 10))
     plt.grid()
     plt.show()
+
+    
+    # fig, ax = plt.subplots(3,1)
+    # ax[0].set_title('Movement in Eta Space')
+    # for i in range(3):
+    #     eta_0s = [eta_log[j][i,0] for j in range(len(eta_log))]
+    #     eta_1s = [eta_log[j][i,1] for j in range(len(eta_log))]
+    #     print(eta_0s)
+    #     print(eta_1s)
+    #     ax[i].plot(eta_0s, eta_1s)
+    #     ax[i].set_xlabel('$\eta_{}^1$'.format(i+1))
+    #     ax[i].set_ylabel('$\eta_{}^2$'.format(i+1))
+    #     ax[i].set_xlim((-0.05, 0.05))
+    #     ax[i].set_ylim((-0.05, 0.05))
+    #     ax[i].grid()
+    # plt.show()
