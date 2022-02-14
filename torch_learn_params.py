@@ -2,6 +2,7 @@ import numpy as np
 import scipy
 import seaborn as sns
 import matplotlib.pyplot as plt
+import argparse
 
 import torch
 device = 'cpu'
@@ -13,17 +14,17 @@ from torch_params_utils import *
 
 if __name__ == '__main__':
 
-    ## ==== Adjustable Parameters ==== ##
-    
-    check_grad = True
-    
-    # eta_mode = 'random'
-    eta_mode = 'zeros'
-    # eta_mode = 'true'
-    
-    max_it = 100
 
-    ## ==== End Adjustable Parameters ==== ##
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--eta_method', type=str, choices=['random', 'zeros', 'true'], default='random')
+    parser.add_argument('--check_grads', action='store_true')
+    parser.add_argument('--max_it', type=int, default=100)
+    args = parser.parse_args()
+
+    eta_method = args.eta_method
+    check_grads = args.check_grads
+    max_it = args.max_it
     
     
     x0 = torch.tensor([8.0, 0.0, 30.0]).to(device)
@@ -32,14 +33,14 @@ if __name__ == '__main__':
     t_space = torch.linspace(0, 10, 25).to(device)
 
     
-    if eta_mode == 'random':
+    if eta_method == 'random':
         eta0 = torch.tensor(np.random.normal(0, 0.001, (3,2)), dtype=torch.float).to(device)
-    elif eta_mode == 'zeros':
+    elif eta_method == 'zeros':
         eta0 = torch.tensor(np.zeros((3,2)), dtype=torch.float).to(device)
-    elif eta_mode == 'true':
+    elif eta_method == 'true':
         eta0 = torch.tensor(np.array([[0, 0.003], [0, 0], [0.005, 0]]), dtype=torch.float).to(device)
     else:
-        raise ValueError('You are trying to set eta in a way that is not supported. Check eta_mode.')
+        raise ValueError('You are trying to set eta in a way that is not supported. Check eta_method.')
     
     
     with torch.no_grad():
@@ -48,14 +49,13 @@ if __name__ == '__main__':
         true_soln = odeint(true_l63, x0, t_space)
 
 
-
     optlor = OptimizeLorenz(x0, t_space, 2, eta0=eta0).to(device)
 
 
     optimizer = torch.optim.Adam([optlor.eta], lr=1e-6)
     loss = torch.nn.MSELoss().to(device)
 
-    print('eta_0 = \n{}'.format(optlor.eta.detach().numpy()))
+    print('eta_0 = \n{}\n'.format(optlor.eta.detach().numpy()))
 
     loss_vec = []
     eta_log = []
@@ -71,7 +71,7 @@ if __name__ == '__main__':
         loss_curr.retain_grad()
         loss_curr.backward()
 
-        if check_grad:
+        if check_grads:
             if it > 0:
                 for i in range(optlor.eta.shape[0]):
                     for j in range(optlor.eta.shape[1]):
@@ -91,7 +91,7 @@ if __name__ == '__main__':
         
         loss_vec.append(loss_curr.detach().numpy())
 
-        if check_grad:
+        if check_grads:
 
             print('===Derivative Check===')
 
