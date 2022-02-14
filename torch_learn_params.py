@@ -7,34 +7,50 @@ import torch
 device = 'cpu'
 from torchdiffeq import odeint
 
-from plotly.offline import iplot
-import plotly.graph_objs as go
-
-
 from torch_params_utils import *
 
 
 
 if __name__ == '__main__':
+
+    ## ==== Adjustable Parameters ==== ##
+    
     check_grad = True
+    
+    # eta_mode = 'random'
+    eta_mode = 'zeros'
+    # eta_mode = 'true'
+    
     max_it = 100
 
+    ## ==== End Adjustable Parameters ==== ##
+    
+    
     x0 = torch.tensor([8.0, 0.0, 30.0]).to(device)
     x0.requires_grad_()
 
     t_space = torch.linspace(0, 10, 25).to(device)
-    
-    
 
+    
+    if eta_mode == 'random':
+        eta0 = torch.tensor(np.random.normal(0, 0.001, (3,2)), dtype=torch.float).to(device)
+    elif eta_mode == 'zeros':
+        eta0 = torch.tensor(np.zeros((3,2)), dtype=torch.float).to(device)
+    elif eta_mode == 'true':
+        eta0 = torch.tensor(np.array([[0, 0.003], [0, 0], [0.005, 0]]), dtype=torch.float).to(device)
+    else:
+        raise ValueError('You are trying to set eta in a way that is not supported. Check eta_mode.')
+    
+    
     with torch.no_grad():
         true_eta = torch.tensor([[0, 0.003], [0, 0], [0.005, 0]], dtype=torch.float)
         true_l63 = lambda t, x : L63_torch_modified(t, x, true_eta)
         true_soln = odeint(true_l63, x0, t_space)
 
-    # eta0 = torch.tensor(0*np.array([[0, 0.003], [0, 0], [0.005, 0]]), dtype=torch.float).to(device)
-    eta0 = torch.tensor(np.array([[3.9006e-06, 4.2233e-06], [4.0497e-06, 4.2702e-06], [-4.1567e-06, 4.1592e-06]]), dtype=torch.float).to(device)
+
+
     optlor = OptimizeLorenz(x0, t_space, 2, eta0=eta0).to(device)
-    # eta0 = torch.tensor(np.random.normal(0, 0.001, (3,2)), dtype=torch.float).to(device)
+
 
     optimizer = torch.optim.Adam([optlor.eta], lr=1e-6)
     loss = torch.nn.MSELoss().to(device)
