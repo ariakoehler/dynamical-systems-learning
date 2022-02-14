@@ -1,6 +1,5 @@
 import numpy as np
 import scipy
-import seaborn as sns
 import matplotlib.pyplot as plt
 import argparse
 
@@ -17,9 +16,10 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--eta_method', type=str, choices=['random', 'zeros', 'true'], default='random')
+    parser.add_argument('--eta_method', type=str, choices=['random', 'zeros', 'actual'], default='random')
     parser.add_argument('--check_grads', action='store_true')
     parser.add_argument('--max_it', type=int, default=100)
+    parser.add_argument('--lr', type=float, default=1e-6)
     args = parser.parse_args()
 
     eta_method = args.eta_method
@@ -31,13 +31,14 @@ if __name__ == '__main__':
     x0.requires_grad_()
 
     t_space = torch.linspace(0, 10, 25).to(device)
+    tol = 10**-5
 
     
     if eta_method == 'random':
         eta0 = torch.tensor(np.random.normal(0, 0.001, (3,2)), dtype=torch.float).to(device)
     elif eta_method == 'zeros':
         eta0 = torch.tensor(np.zeros((3,2)), dtype=torch.float).to(device)
-    elif eta_method == 'true':
+    elif eta_method == 'actual':
         eta0 = torch.tensor(np.array([[0, 0.003], [0, 0], [0.005, 0]]), dtype=torch.float).to(device)
     else:
         raise ValueError('You are trying to set eta in a way that is not supported. Check eta_method.')
@@ -52,7 +53,7 @@ if __name__ == '__main__':
     optlor = OptimizeLorenz(x0, t_space, 2, eta0=eta0).to(device)
 
 
-    optimizer = torch.optim.Adam([optlor.eta], lr=1e-6)
+    optimizer = torch.optim.Adam([optlor.eta], lr=args.lr)
     loss = torch.nn.MSELoss().to(device)
 
     print('eta_0 = \n{}\n'.format(optlor.eta.detach().numpy()))
@@ -86,8 +87,9 @@ if __name__ == '__main__':
         eta_log.append(optlor.eta.detach().numpy())
         print('loss = {:.2f}\n\n'.format(loss_curr))
 
-        if np.linalg.norm(optlor.eta.grad.detach().numpy()) < 10**-5:
-            break
+        if np.linalg.norm(optlor.eta.grad.detach().numpy()) < tol:
+            if not (eta_method == 'actual' and it < 1):
+                break
         
         loss_vec.append(loss_curr.detach().numpy())
 
@@ -117,7 +119,7 @@ if __name__ == '__main__':
         optimizer.step()
 
     fig, ax = plt.subplots(1,1)
-    ax.plot(range(max_it), loss_vec)
+    ax.plot(range(len(loss_vec)), loss_vec)
     ax.set_xlabel('Iterations')
     ax.set_ylabel('MSE Loss')
     ax.set_title('Loss as a Function of Iterations')

@@ -2,6 +2,7 @@
 
 Finds coefficient values of hidden terms in a dynamical system given the shape of the hidden terms.
 
+
 ## Dependencies
 
 - numpy
@@ -9,6 +10,7 @@ Finds coefficient values of hidden terms in a dynamical system given the shape o
 - matplotlib
 - torch
 - [torchdiffeq](https://github.com/rtqichen/torchdiffeq)
+
 
 ## Structure of the Code
 
@@ -18,11 +20,14 @@ Finds coefficient values of hidden terms in a dynamical system given the shape o
 
 [notebooks/](https://github.com/carterkoehler/dynamical-systems-learning/tree/main/notebooks): Contains jupyter notebooks with elementary tests of the code and visualizations of the results. Primarily serves as scratch space for development.
 
-## Current Problem
 
+## Current Problem
+n
 We are concerned with a perturbed Lorenz system, where the perturbations come in the form of functions added onto the RHS of the equations, scaled by small parameters eta. We wish to know if we can use standard optimization techniques, as implemented by torch, to learn the values of these parameters, given that we know what shape they are (i.e. x-squared or xy).
 
+
 ## Methodology
+
 
 ## Running the Code
 
@@ -32,8 +37,15 @@ For the sake of testing different conditions, the python script can be run with 
 
 - `--lr` specifies the learning rate
 - `--max_it` specifies the number of iterations before terminating
-- `--check_grads` if True, outputs an approximation of the gradients of each parameter at the current value alongside the gradients used in the last update
+- `--check_grads` if set, outputs an approximation of the gradients of each parameter at the current value alongside the gradients used in the last update
 - `--eta_method` specifies how the initial eta should be chosen
- - "random" samples the etas randomly from a Gaussian distribution with low variance centered on 0.
- - "zeros" initializes them all to be 0
- - "true" sets them to the true values of eta. This one is intended to be a check on our methods
+  - "random" samples the etas randomly from a Gaussian distribution with low variance centered on 0.
+  - "zeros" initializes them all to be 0
+  - "actual" sets them to the true values of eta. This one is intended to be a check on our methods
+
+For making any further adjustments, here is a quick guide to a few important variables
+
+- `true_eta` indicates the actual value of eta, used to calculate data from the "true" system.
+- `L63_torch_modified` is the function in [torch_params_utils.py](https://github.com/carterkoehler/dynamical-systems-learning/blob/main/torch_params_utils.py) used to generate most of the "data" and the predictions for optimizing eta.
+- `x0` is the starting point for all of the trajectories used in the optimization.
+- `t_space` is the set of time values each trajectory is over.
