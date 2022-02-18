@@ -1,6 +1,5 @@
 import numpy as np
 import scipy
-import seaborn as sns
 import torch
 device = 'cpu'
 
@@ -22,6 +21,8 @@ def L63_torch_modified(t, S, eta, sigma=10.0, rho=28.0, beta=8.0/3):
     terms = torch.tensor([S[1]*S[2], S[0]**2])
     dS += torch.matmul(eta, terms)
     return dS
+
+
 
 
 
