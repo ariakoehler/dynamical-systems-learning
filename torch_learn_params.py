@@ -54,7 +54,8 @@ if __name__ == '__main__':
 
 
     optimizer = torch.optim.Adam([optlor.eta], lr=args.lr)
-    loss = torch.nn.MSELoss().to(device)
+    # loss = torch.nn.MSELoss().to(device)
+    loss = DiffLoss().to(device)
 
     print('eta_0 = \n{}\n'.format(optlor.eta.detach().numpy()))
 
@@ -78,7 +79,6 @@ if __name__ == '__main__':
                     for j in range(optlor.eta.shape[1]):
                         print('Backprop Derivative for {},{} = {:.2f}'.format(i, j, optlor.eta.grad[i,j]))
                         print('Checked Derivative for {},{} = {:.2f}'.format(i, j, grad_check[i,j]))
-                        # print('Error Ratio = {:.2f}'.format(optlor.eta.grad[i,j] / grad_check[i,j]))
                         print()
             print('\n')
 
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     fig, ax = plt.subplots(1,1)
     ax.plot(range(len(loss_vec)), loss_vec)
     ax.set_xlabel('Iterations')
-    ax.set_ylabel('MSE Loss')
+    ax.set_ylabel('Loss')
     ax.set_title('Loss as a Function of Iterations')
     ax.set_xlim((0, max_it))
     ax.set_ylim((0, max(loss_vec) + 10))

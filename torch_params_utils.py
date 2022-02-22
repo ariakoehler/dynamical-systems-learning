@@ -24,6 +24,18 @@ def L63_torch_modified(t, S, eta, sigma=10.0, rho=28.0, beta=8.0/3):
 
 
 
+class DiffLoss(torch.nn.Module):
+
+    def __init__(self):
+        super(DiffLoss, self).__init__()
+
+    def forward(self, a, b):
+
+        a_diff = torch.diff(a, axis=0)
+        b_diff = torch.diff(b, axis=0)
+
+        return torch.mean((b_diff - a_diff)**2)
+
 
 
 # OptimizeLorenz and code using it adapted from examples by the makers
