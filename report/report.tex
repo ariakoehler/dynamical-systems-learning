@@ -1,0 +1,80 @@
+\documentclass[12pt]{article}
+
+\author{Carter Koehler}
+\title{Locating Error in Dynamical Systems}
+\date{03/19/2022}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+
+
+\newcommand{\cn}{$^{\textit{[citation needed]}}$}
+%% \usepackage{}
+
+
+\begin{document}
+
+\maketitle
+
+
+
+\begin{abstract}
+  
+\end{abstract}
+
+
+\section{Introduction}
+
+Dynamical Systems models have been used to great effect in a variety of different fields, and though analysis of these models is well-worn ground, some problems remain when it comes to comparing predictions by the model to real-world data.
+
+
+First and foremost is the issue of parameter estimation. Though frameworks exist for estimating the constant parameters of a differential equation, such frameworks run into a variety of problems, including$\ldots$
+
+
+The problem we will focus on primarily is the issue of locating sources of error in dynamical systems. If a proposed model gives us a certain quantity of error, how do we know what causes that error? Is it the result of unmodelled effects in the right-hand sides of our equations? If so, can we learn those effects given some guesses of their shapes? How much error is coming from discretizing the time steps, and can we estimate that and try to account for it when making predictions? And last, how much of the error we see can we attribute to ``true'' noise or measurement error? Many attempts have been made, with more or less success, to address these issues, but few have attempted to look at these problems in a unified way and attempted to tackle the problem of uncertainty in dynamical systems as a single problem.
+
+
+These are obviously very large problems, and we won't aspire to solve all of them forever in this limited research span, but we think that approaching them as a unified problem will provide useful ways of thinking as the field progresses
+
+
+
+\section{Literature Review}
+
+\subsection{Gelman, et al. (1996)\---Establishing a Bayesian Approach}
+
+\subsection{Ramsay, et al. (2007)\---Parameter Estimation for ODEs}
+
+\subsection{Levine and Stuart (2021)\---Model Error}
+
+\subsection{Chkrebtii, et al. (2016)\---Quantifying Uncertainty}
+
+\subsection{Cockayne, et al. (2019)\---Average-Case Error through Bayesian Analysis}
+
+
+
+
+\section{}
+
+
+
+\section{Methodologies Used}
+
+\subsection{Sample Problem\---Perturbed Lorenz System}
+
+\subsection{Backpropagation-Based Optimization}
+
+\subsection{Other Things that We May Use for Error Quantification}
+
+
+
+\section{Results}
+
+
+\bibliographystyle{unsrt}
+\nocite{*}
+\bibliography{dynsys}
+
+
+\end{document}
