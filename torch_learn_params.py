@@ -30,7 +30,7 @@ if __name__ == '__main__':
     x0 = torch.tensor([8.0, 0.0, 30.0]).to(device)
     x0.requires_grad_()
 
-    t_space = torch.linspace(0, 10, 25).to(device)
+    t_space = torch.linspace(0, 10, 100).to(device)
     tol = 10**-5
 
     
@@ -57,6 +57,8 @@ if __name__ == '__main__':
     # loss = torch.nn.MSELoss().to(device)
     loss = DiffLoss().to(device)
 
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.2, verbose=True)
+
     print('eta_0 = \n{}\n'.format(optlor.eta.detach().numpy()))
 
     loss_vec = []
@@ -80,7 +82,7 @@ if __name__ == '__main__':
                         print('Backprop Derivative for {},{} = {:.2f}'.format(i, j, optlor.eta.grad[i,j]))
                         print('Checked Derivative for {},{} = {:.2f}'.format(i, j, grad_check[i,j]))
                         print()
-            print('\n')
+                print('\n')
 
         print('Iterarion {}'.format(it+1))
         print('eta = \n{}'.format(optlor.eta.detach().numpy()))
@@ -117,6 +119,10 @@ if __name__ == '__main__':
                     grad_check[i,j] = ((L0 - L1)/(2*eps)).item()
         
         optimizer.step()
+        scheduler.step(loss_curr)
+
+        # if (torch.abs(optlor.eta.grad) <= 1e6).all():
+        #     optimizer.lr = optimizer.lr * 10
 
     fig, ax = plt.subplots(1,1)
     ax.plot(range(len(loss_vec)), loss_vec)
