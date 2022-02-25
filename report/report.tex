@@ -44,10 +44,47 @@ These are obviously very large problems, and we won't aspire to solve all of the
 \subsection{Proof of Concept}
 
 
+\section{Notation}
+
+\begin{itemize}
+
+\item
+  $m$: Number of dimensions of state vector
+
+\item
+  $N$: Number of time points
+
+\item
+  $t_i$: Time at point $i$
+
+\item
+  $x_i^*$: State vector of the ``true'' model at time $t_i$. $x_i^* \in \mathbb{R}^m,\, i=1,\ldots, N$
+
+\item
+  $x_i$: State vector of the approximate model at time $t_i$. $x_i \in \mathbb{R}^m,\, i=1,\ldots, N$
+
+\item
+  $y_i^*$: Diff vector for the exact model, $y_i^* = x_{i+1}^* - x_i^*$
+  
+\item
+  $y_i$: Diff vector for the approximate model, $y_i = x_{i+1} - x_i$
+
+\item
+  $f_0$: Basic model, which is known in principle. $f_0: \mathbb{R}^m \to \mathbb{R}^m$.
+
+\item
+  $m^*$: Additional model, including unmodelled terms. In principle not known. $m^*: : \mathbb{R}^m \to \mathbb{R}^m$.
+
+\item
+  
+
+\end{itemize}
+
+
 
 \section{Literature Review}
 
-There are two main tasks we are interested in 
+There are two main tasks we are interested in: 
 
 \subsection{Parameter Estimation}
 
