@@ -1,6 +1,6 @@
 \documentclass[12pt]{article}
 
-\author{Carter Koehler}
+\author{Carter Koehler\\{\small Advisor: Matthew Plumlee}}
 \title{Locating Error in Dynamical Systems}
 \date{03/19/2022}
 
@@ -25,25 +25,6 @@
 \end{abstract}
 
 
-\section{Introduction}
-
-\subsection{Direction}
-
-Dynamical Systems models have been used to great effect in a variety of different fields, and though analysis of these models is well-worn ground, some problems remain when it comes to comparing predictions by the model to real-world data.
-
-
-First and foremost is the issue of parameter estimation. Though frameworks exist for estimating the constant parameters of a differential equation, such frameworks run into a variety of problems, including$\ldots$
-
-
-The problem we will focus on primarily is the issue of locating sources of error in dynamical systems. If a proposed model gives us a certain quantity of error, how do we know what causes that error? Is it the result of unmodelled effects in the right-hand sides of our equations? If so, can we learn those effects given some guesses of their shapes? How much error is coming from discretizing the time steps, and can we estimate that and try to account for it when making predictions? And last, how much of the error we see can we attribute to ``true'' noise or measurement error? Many attempts have been made, with more or less success, to address these issues, but few have attempted to look at these problems in a unified way and attempted to tackle the problem of uncertainty in dynamical systems as a single problem.
-
-
-These are obviously very large problems, and we won't aspire to solve all of them forever in this limited research span, but we think that approaching them as a unified problem will provide useful ways of thinking as the field progresses
-
-
-\subsection{Proof of Concept}
-
-
 \section{Notation}
 
 \begin{itemize}
@@ -58,10 +39,13 @@ These are obviously very large problems, and we won't aspire to solve all of the
   $t_i$: Time at point $i$
 
 \item
-  $x_i^*$: State vector of the ``true'' model at time $t_i$. $x_i^* \in \mathbb{R}^m,\, i=1,\ldots, N$
+  $\beta$: Parameters of a given model, usually those being estimated.
+  
+\item
+  $x_i^* \in \mathbb{R}^m,\, i=1,\ldots, N$: State vector of the ``true'' model at time $t_i$. 
 
 \item
-  $x_i$: State vector of the approximate model at time $t_i$. $x_i \in \mathbb{R}^m,\, i=1,\ldots, N$
+  $x_i \in \mathbb{R}^m,\, i=1,\ldots, N$: State vector of the approximate model at time $t_i$. 
 
 \item
   $y_i^*$: Diff vector for the exact model, $y_i^* = x_{i+1}^* - x_i^*$
@@ -70,26 +54,67 @@ These are obviously very large problems, and we won't aspire to solve all of the
   $y_i$: Diff vector for the approximate model, $y_i = x_{i+1} - x_i$
 
 \item
-  $f_0$: Basic model, which is known in principle. $f_0: \mathbb{R}^m \to \mathbb{R}^m$.
+  $f_0: \mathbb{R}^m \to \mathbb{R}^m$: Basic model, which is known in principle.
+
 
 \item
-  $m^*$: Additional model, including unmodelled terms. In principle not known. $m^*: : \mathbb{R}^m \to \mathbb{R}^m$.
-
-\item
+  $m^*: \mathbb{R}^m \to \mathbb{R}^m$: Unmodelled terms in a system. In principle not known.
   
+\item
+  $n$: Number of basis functions we search over when looking for unmodelled terms.
+  
+\item
+  $\eta \in \mathbb{R}^n$: Parameters associated with the functions in our search basis.
 
 \end{itemize}
 
 
 
-\section{Literature Review}
+\section{Introduction}
 
-There are two main tasks we are interested in: 
+\subsection{Direction}
+
+Dynamical Systems models have been used to great effect in a variety of different fields, and though analysis of these models is well-worn ground, some problems remain when it comes to comparing predictions by the model to real-world data.
+
+
+First and foremost is the issue of parameter estimation. Though frameworks exist for estimating the constant parameters of a differential equation, such frameworks run into a variety of problems, including$\ldots$
+
+
+The problem we will focus on primarily is the issue of locating sources of error in dynamical systems. If a proposed model gives us a certain quantity of error, how do we know what causes that error? Is it the result of unmodelled effects in the right-hand sides of our equations? If so, can we learn those effects given some guesses of their shapes? How much error is coming from discretizing the time steps, and can we estimate that and try to account for it when making predictions? And last, how much of the error we see can we attribute to ``true'' noise or measurement error? Many attempts have been made, with more or less success, to address these issues, but few have attempted to look at these problems in a unified way and attempted to tackle the problem of uncertainty in dynamical systems as a single problem.
+
+
+These are obviously very large problems, and we won't try to solve all of them forever in this limited research span, but we think that approaching them as a unified problem will provide useful ways of thinking as the field progresses.
+
+
+The dynamical systems we will look at\---and the questions we try to answer\---can take multiple different forms, but the basic problem from which all others descend concerns the general system $$\dot{x}(t) = f(x,t;\beta)$$
+
+Though most of these methods work in the general case, all of the systems we actually look at will have eno direct dependence on $t$, so we will ignore it going forward and just write $f(x;\beta)$.
+
+
+\section{Background}
 
 \subsection{Parameter Estimation}
 
+The first problem we are interested in is estimating $\beta$. That is, given $f(x;\beta)$ and a set of observations $y_1, \ldots, y_N$, can we find $\beta$ to within a reasonable error margin? Perhaps unsurprisingly, this is a well-worn problem with many different solution methods.
+
+Gelman, et al. (1996) solved a particular instance of this problem, related to pharmacokinetics, using a hierarchical Bayesian approach. They began with a Bayesian prior describing the parameters of their model, under which they numerically solved the dynamical systems and then used the resulting error distributions to update their paramter distributions using fairly standard Monte Carlo methods. One advantage this gave them in their particular case was that it allowed them to jointly construct a population model and individual models by exploiting the hierarchical nature of Bayesian models.\cite{gelman} However, for a general problems their method has a litany of problems, including that there are not always obvious choices of prior, and the computation of posterior is not always tractable.
+
+More recently, the Bayesian approach for parameter estimation has fallen out of favor and been largely replaced by collocation methods, like those used in Ramsay, et al. (2007), which treats the problem as a nested optimization, which considers the solution of the system as a sum of basis functions. They optimize in their outer loop over the parameters, checking for fit against observed values, while their inner loop finds the coefficients of the basis functions which give the optimally-fitting function to the system for a given set of parameters.\cite{ramsay} This generally gives good estimates to the parameters in question, but it gives almost no indication of how good they are.
+
+Even more recently, methods from machine learning have been brought to bear on this problem. Levine and Stuart (2021) use RNNs to solve not only the problem of parameter estimation, but also the issue of discovering model error, which is broadly defined as errors resulting from a misspecified or underspecified model. For example, if one sets $\dot{x} \propto x$, but in reality $\dot{x} \propto x^2$, there is no way to recover the ``real'' model through simple parameter estimation. Their methods are remarkably powerful and show additionally that starting with an educated guess of the true model can cause RNNs to perform much better than they would on their own. However, there are a variety of questions that go unanswered. For example, how much uncertainty can we expect in these estimations in general? And how can we ensure that the parameters we discover, as well as our starting model, are uniquely meaningful, and that we don't just absorb the ``known'' model in our discovered model?
+
+
 \subsection{Uncertainty Quantification}
 
+
+
+
+
+
+
+%% \section{Literature Review}
+
+%% There are two main tasks we are interested in, both of which have 
 
 
 %% \subsection{Gelman, et al. (1996)\---Establishing a Bayesian Approach}
@@ -105,10 +130,6 @@ There are two main tasks we are interested in:
 
 
 
-\section{}
-
-
-
 \section{Methodologies Used}
 
 \subsection{Sample Problem\---Perturbed Lorenz System}
@@ -120,6 +141,9 @@ There are two main tasks we are interested in:
 
 
 \section{Results}
+
+
+\section{Future Directions}
 
 
 \bibliographystyle{unsrt}

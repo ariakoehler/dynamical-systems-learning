@@ -1,5 +1,19 @@
 \begin{thebibliography}{1}
 
+\bibitem{gelman}
+Andrew Gelman, Frederic Bois, and Jiming Jiang.
+\newblock Physiological pharmacokinetic analysis using population modeling and
+  informative prior distributions.
+\newblock {\em Journal of the American Statistical Association},
+  91(436):1400--1412, 1996.
+
+\bibitem{ramsay}
+J.~O. Ramsay, G.~Hooker, D.~Campbell, and J.~Cao.
+\newblock Parameter estimation for differential equations: a generalized
+  smoothing approach.
+\newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)}, 69(5):741--796, 2007.
+
 \bibitem{chkrebtii}
 Oksana~A. Chkrebtii, David~A. Campbell, Ben Calderhead, and Mark~A. Girolami.
 \newblock {Bayesian Solution Uncertainty Quantification for Differential
@@ -11,23 +25,9 @@ Jon Cockayne, Chris~J. Oates, T.~J. Sullivan, and Mark Girolami.
 \newblock Bayesian probabilistic numerical methods.
 \newblock {\em SIAM Review}, 61(4):756--789, 2019.
 
-\bibitem{gelman}
-Andrew Gelman, Frederic Bois, and Jiming Jiang.
-\newblock Physiological pharmacokinetic analysis using population modeling and
-  informative prior distributions.
-\newblock {\em Journal of the American Statistical Association},
-  91(436):1400--1412, 1996.
-
 \bibitem{levine}
 Matthew~E. Levine and Andrew~M. Stuart.
 \newblock A framework for machine learning of model error in dynamical systems,
   2021.
-
-\bibitem{ramsay}
-J.~O. Ramsay, G.~Hooker, D.~Campbell, and J.~Cao.
-\newblock Parameter estimation for differential equations: a generalized
-  smoothing approach.
-\newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
-  Methodology)}, 69(5):741--796, 2007.
 
 \end{thebibliography}
