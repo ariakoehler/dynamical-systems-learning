@@ -23,6 +23,24 @@ def L63_torch_modified(t, S, eta, sigma=10.0, rho=28.0, beta=8.0/3):
     return dS
 
 
+def L63_torch_modified_vec(t, S, eta, sigma=10.0, rho=28.0, beta=8.0/3):
+    """ Lorenz-63 dynamical model with added terms implemented for torch. """
+    x_1 = sigma*(S[:,1]-S[:,0])
+    x_2 = S[:,0]*(rho-S[:,2])-S[:,1]
+    x_3 = S[:,0]*S[:,1] - beta*S[:,2]
+    dS  = torch.vstack((x_1,x_2,x_3))
+    terms = torch.vstack([S[:,1]*S[:,2], S[:,0]**2])
+    m = torch.matmul(eta, terms)
+    dS = dS + m
+    return dS.T
+
+
+def make_predictions(t, x_true, optlor):
+    l63_fn = lambda t, x : L63_torch_modified(t, x, eta)
+    dt = torch.diff(t)
+    y_pred = optlor.forward(t, x_true)[:-1]
+    return y_pred
+
 
 class DiffLoss(torch.nn.Module):
 
@@ -59,7 +77,7 @@ class OptimizeLorenz(torch.nn.Module):
         
 
     def rhs(self, x, t):
-        return L63_torch_modified(t, x, self.eta)
+        return L63_torch_modified_vec(t, x, self.eta)
         
     def forward(self, t, x):
         return self.rhs(x, t)
