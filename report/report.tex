@@ -122,32 +122,72 @@ Our work here will follow most closely from Levine and Stuart (2021) and will fo
 We should note here, in order to justify our referring to $m^*$ as a perturbation, that we will assume $||f_0|| \gg ||m^*||$.
 
 
-\subsection{Sample Problems}
-
-We mostly concern ourselves with two dynamical systems, which we perturb in known ways. We choose these two primarily because Fitzhugh-Nagumo is very well-behaved and should be easy to learn $\eta$ on, whereas Lorenz-63 is likely to be more difficult, due to its high sensitivity to changes in the model.
 
 
-\subsubsection{Perturbed Fitzhugh-Nagumo System}
+\section{Methodology}
 
-The Fitzhugh-Nagumo dynamical system is defined as follows:
-
-\begin{align*}
-  
-\end{align}
-
-
-\subsubsection{Perturbed Lorenz System}
+We have already laid out several approaches to solving this problem, most of which have been Bayesian. We will take an approach designed to leverage more recent developments in the fields of machine learning and numerical optimization, in particular the \textit{autograd} functionality of \textit{torch}, which allows us to do backpropagation on nearly any operation we can think of.
 
 
 
 \subsection{Backpropagation-Based Optimization}
 
+Our main approach to
 
 
-\section{Methodologies Used}
+
+\subsection{Choice of Norm}
 
 
-\subsection{Other Things that We May Use for Error Quantification}
+
+%% \subsection{Other Things that We May Use for Error Quantification}
+
+
+
+
+\section{Sample Problems}
+
+We mostly concern ourselves with two dynamical systems, which we perturb in known ways. We choose these two primarily because Fitzhugh-Nagumo is very well-behaved and should be easy to learn $\eta$ on, whereas Lorenz-63 is likely to be more difficult, due to its high sensitivity to changes in the model.
+
+
+\subsection{Fitzhugh-Nagumo System}
+
+The Fitzhugh-Nagumo equations are defined as follows:
+
+\begin{align*}
+  \dot{V} &= c \left(V - \frac{V^3}{3} + R \right)\\
+  \dot{R} &= -\frac{1}{c} \left( V - a - b R \right)
+\end{align*}
+
+We won't go too deep into the theory of this system. Its specific history and a more complete description of its behavior of it are given in \cite{ramsay}. For our purposes, we will take $a=0.2,\, b=0.2,\, c=3.0$, which produces oscillations in the state vector, where each variable changes between times of steep increase and times of relatively little change, as shown in Figure 1.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{fn-unperturbed.png}
+  \caption{The Fitzhugh-Nagumo Equations with no perturbation.}
+\end{figure}
+
+
+
+\subsection{Lorenz System}
+
+The Lorenz-63 System is given as the following:
+
+\begin{align*}
+  \dot{x} &= \sigma (y - x)\\
+  \dot{y} &= x ( \rho - z ) - y\\
+  \dot{z} &= x y - \beta z
+\end{align*}
+
+For choices of parameters $\sigma=10,\, \rho=28,\, \beta=\frac{8}{3}$, this produces a chaotic attractor which should look familiar to those inside and outside the mathematical community. The Lorenz attractor is particularly noted because of its sensitivity to small changes in initial conditions and scalar parameters.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{lorenz-unperturbed.png}
+  \caption{The classical Lorenz-63 System}
+\end{figure}
+
+
 
 
 
