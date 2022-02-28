@@ -126,17 +126,17 @@ We should note here, in order to justify our referring to $m^*$ as a perturbatio
 
 \section{Methodology}
 
-We have already laid out several approaches to solving this problem, most of which have been Bayesian. We will take an approach designed to leverage more recent developments in the fields of machine learning and numerical optimization, in particular the \textit{autograd} functionality of \textit{torch}, which allows us to do backpropagation on nearly any operation we can think of.
+We have already laid out several approaches to solving this problem, most of which have been Bayesian. We will take an approach designed to leverage more recent developments in the fields of machine learning and numerical optimization, in particular the \textit{autograd} functionality of \textit{torch}, which allows us to backpropagate error through nearly any operation we can think of.
 
 
 
 \subsection{Backpropagation-Based Optimization}
 
-Our main approach to
+Our main approach to learning the small parameters $\eta_{ij}$ of our model involves fairly straightforward backpropagation. We choose a suitable norm $\|\cdot\|$, the details of which are discussed further in (\ref{norms}), and suitable way to make predictions
 
 
 
-\subsection{Choice of Norm}
+\subsection{Choice of Norm}\label{norms}
 
 
 
