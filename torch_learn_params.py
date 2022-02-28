@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
     
     if eta_method == 'random':
-        eta0 = torch.tensor(np.random.normal(0, 0.001, (n_dim,m_basis_fns)), dtype=torch.float).to(device)
+        eta0 = torch.tensor(np.random.normal(0, 0.0001, (n_dim,m_basis_fns)), dtype=torch.float).to(device)
     elif eta_method == 'zeros':
         eta0 = torch.tensor(np.zeros((n_dim,m_basis_fns)), dtype=torch.float).to(device)
     elif eta_method == 'actual':
