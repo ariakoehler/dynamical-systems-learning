@@ -13,13 +13,12 @@ from torch_params_utils import *
 
 if __name__ == '__main__':
 
-
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--eta_method', type=str, choices=['random', 'zeros', 'actual'], default='random')
     parser.add_argument('--check_grads', action='store_true')
-    parser.add_argument('--max_it', type=int, default=100)
-    parser.add_argument('--lr', type=float, default=1e-6)
+    parser.add_argument('--max_it', type=int, default=1000)
+    parser.add_argument('--lr', type=float, default=1e-5)
     args = parser.parse_args()
 
     eta_method = args.eta_method
@@ -30,14 +29,17 @@ if __name__ == '__main__':
     x0 = torch.tensor([8.0, 0.0, 30.0]).to(device)
     x0.requires_grad_()
 
-    t_space = torch.linspace(0, 10, 100).to(device)
+    t_space = torch.linspace(0, 100, 1000).to(device)
     tol = 10**-5
+
+    m_basis_fns = 2
+    n_dim = 3
 
     
     if eta_method == 'random':
-        eta0 = torch.tensor(np.random.normal(0, 0.001, (3,2)), dtype=torch.float).to(device)
+        eta0 = torch.tensor(np.random.normal(0, 0.001, (n_dim,m_basis_fns)), dtype=torch.float).to(device)
     elif eta_method == 'zeros':
-        eta0 = torch.tensor(np.zeros((3,2)), dtype=torch.float).to(device)
+        eta0 = torch.tensor(np.zeros((n_dim,m_basis_fns)), dtype=torch.float).to(device)
     elif eta_method == 'actual':
         eta0 = torch.tensor(np.array([[0, 0.003], [0, 0], [0.005, 0]]), dtype=torch.float).to(device)
     else:
@@ -48,16 +50,17 @@ if __name__ == '__main__':
         true_eta = torch.tensor([[0, 0.003], [0, 0], [0.005, 0]], dtype=torch.float)
         true_l63 = lambda t, x : L63_torch_modified(t, x, true_eta)
         true_soln = odeint(true_l63, x0, t_space)
+        true_diff = torch.diff(true_soln, axis=0)
 
 
     optlor = OptimizeLorenz(x0, t_space, 2, eta0=eta0).to(device)
 
 
     optimizer = torch.optim.Adam([optlor.eta], lr=args.lr)
-    # loss = torch.nn.MSELoss().to(device)
-    loss = DiffLoss().to(device)
+    loss = torch.nn.MSELoss().to(device)
+    # loss = DiffLoss().to(device)
 
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.2, verbose=True)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, verbose=True)
 
     print('eta_0 = \n{}\n'.format(optlor.eta.detach().numpy()))
 
@@ -69,9 +72,10 @@ if __name__ == '__main__':
     
         optimizer.zero_grad()
     
-        pred_soln = odeint(optlor, x0, t_space).to(device)
+        # pred_soln = odeint(optlor, x0, t_space).to(device)
+        pred_diff = make_predictions(t_space, true_soln, optlor).to(device)
         
-        loss_curr = loss(pred_soln, true_soln)
+        loss_curr = loss(pred_diff, true_diff)
         loss_curr.retain_grad()
         loss_curr.backward()
 
@@ -87,13 +91,17 @@ if __name__ == '__main__':
         print('Iterarion {}'.format(it+1))
         print('eta = \n{}'.format(optlor.eta.detach().numpy()))
         eta_log.append(optlor.eta.detach().numpy())
-        print('loss = {:.2f}\n\n'.format(loss_curr))
+        print('loss = {:.3f}\n\n'.format(loss_curr))
 
         if np.linalg.norm(optlor.eta.grad.detach().numpy()) < tol:
             if not (eta_method == 'actual' and it < 1):
                 break
         
         loss_vec.append(loss_curr.detach().numpy())
+
+        print(optlor.eta.grad)
+        # print(pred_diff)
+        # print(true_diff)
 
         if check_grads:
 
@@ -121,16 +129,13 @@ if __name__ == '__main__':
         optimizer.step()
         scheduler.step(loss_curr)
 
-        # if (torch.abs(optlor.eta.grad) <= 1e6).all():
-        #     optimizer.lr = optimizer.lr * 10
-
     fig, ax = plt.subplots(1,1)
     ax.plot(range(len(loss_vec)), loss_vec)
     ax.set_xlabel('Iterations')
     ax.set_ylabel('Loss')
     ax.set_title('Loss as a Function of Iterations')
     ax.set_xlim((0, max_it))
-    ax.set_ylim((0, max(loss_vec) + 10))
+    ax.set_ylim((0, max(loss_vec) * 1.2))
     plt.grid()
     plt.show()
 
