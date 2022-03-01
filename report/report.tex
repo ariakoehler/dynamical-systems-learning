@@ -144,7 +144,7 @@ One way of determining predictions and loss is to numerically solve the ODE for 
 
 Another choice of evaluation criterion we wish to look into, which has several notable advantages over this method is what we will refer as the Diff Loss. The main idea behind Diff Loss is that, when we solve an entire system, errors in the solution will propagate forward, so that, for $\ell \gg 1$, we expect $\| x*_{\ell} - x_{\ell} \|$ to be dominated by accumulated error from preveious time points. Thus, most of our error would be noise, either the result of discretization error or from earlier $x_i$s.
 
-We propose to fix this by learning over ``diffs'' of $x^*$, which we will write as $y^*$, defined as $y^*_i = x_{i+1} - x_i$. We will compute our predicted values $y_i$ based on $x^*$ by simply computing the right-hand side of the ODEs for our current $\eta$. More precisely, $$y_i = f_0(x^*_)
+We propose to fix this by learning over ``diffs'' of $x^*$, which we will write as $y^*$, defined as $y^*_i = x_{i+1} - x_i$. We will compute our predicted values $y_i$ based on $x^*$ by simply computing the right-hand side of the ODEs for our current $\eta$. More precisely, $$y_i = f_0(x^*_i) + m(x^*_i, \eta),\, i=0,\ldots,N-1$$ Then we compute a loss by merely taking the 2-norm over the true diff and the predicted diff, so that we might write $L: \mathbb{R}^{N \times k} \times \mathbb{R}^n \to \mathbb{R}$ as $$L(x^*, \eta) = \| y* - y_{\eta} \|$$
 
 
 
