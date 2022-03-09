@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2021.9.30)  3 MAR 2022 19:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2021.9.30)  9 MAR 2022 10:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -225,7 +225,7 @@ File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 35.
 
-Overfull \hbox (16.22806pt too wide) in paragraph at lines 56--57
+Overfull \hbox (16.22806pt too wide) in paragraph at lines 59--60
 []$\OML/cmm/m/it/12 m[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x\OT1/cmr/m/n/12 )$: B
 a-sis func-tions for ap-prox-i-mat-ing $\OML/cmm/m/it/12 m[]$\OT1/cmr/m/n/12 . 
 Write $\OML/cmm/m/it/12 m\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x\OT1/cmr/m/n/12 ) =
@@ -235,51 +235,55 @@ Write $\OML/cmm/m/it/12 m\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x\OT1/cmr/m/n/12 ) =
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Overfull \hbox (0.88986pt too wide) in paragraph at lines 113--114
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+Overfull \hbox (0.88986pt too wide) in paragraph at lines 120--121
 \OT1/cmr/m/n/12 data has been col-lected, among other con-trol-ling factors.$[]
 $However,
  []
 
-[3] [4] [5] [6]
-<fn-unperturbed.png, id=35, 397.485pt x 264.99pt>
+[4] [5] [6]
+<fn-unperturbed.png, id=36, 397.485pt x 264.99pt>
 File: fn-unperturbed.png Graphic file (type png)
 <use fn-unperturbed.png>
-Package pdftex.def Info: fn-unperturbed.png  used on input line 177.
+Package pdftex.def Info: fn-unperturbed.png  used on input line 192.
 (pdftex.def)             Requested size: 272.99881pt x 182.00226pt.
  [7 <./fn-unperturbed.png>]
-<lorenz-unperturbed.png, id=42, 567.11874pt x 526.96875pt>
+<lorenz-unperturbed.png, id=43, 567.11874pt x 526.96875pt>
 File: lorenz-unperturbed.png Graphic file (type png)
 <use lorenz-unperturbed.png>
-Package pdftex.def Info: lorenz-unperturbed.png  used on input line 197.
+Package pdftex.def Info: lorenz-unperturbed.png  used on input line 212.
 (pdftex.def)             Requested size: 350.99762pt x 326.15437pt.
- (./report.bbl [8]) [9 <./lorenz-unperturbed.png>] (./report.aux) ) 
+ (./report.bbl [8 <./lorenz-unperturbed.png>]
+Missing character: There is no Ã in font cmr12!
+Missing character: There is no ¼ in font cmr12!
+ [9]) [10] (./report.aux) ) 
 Here is how much of TeX's memory you used:
- 2446 strings out of 494923
- 32230 string characters out of 6180742
- 87994 words of memory out of 5000000
- 5721 multiletter control sequences out of 15000+600000
- 13752 words of font info for 52 fonts, out of 8000000 for 9000
+ 2452 strings out of 494923
+ 32282 string characters out of 6180742
+ 86003 words of memory out of 5000000
+ 5726 multiletter control sequences out of 15000+600000
+ 13921 words of font info for 53 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 41i,9n,26p,1373b,240s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti8.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (9 pages, 217531 bytes).
+ 41i,9n,26p,1031b,240s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+ex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmti8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbol
+s/msbm10.pfb>
+Output written on report.pdf (10 pages, 220220 bytes).
 PDF statistics:
- 95 PDF objects out of 1000 (max. 8388607)
- 65 compressed objects within 1 object stream
+ 102 PDF objects out of 1000 (max. 8388607)
+ 70 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
