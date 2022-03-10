@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
     optimizer = torch.optim.Adam([optlor.eta], lr=args.lr)
     loss = torch.nn.MSELoss().to(device)
-    # loss = DiffLoss().to(device)
+
 
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, verbose=True)
 
@@ -78,6 +78,7 @@ if __name__ == '__main__':
         loss_curr = loss(pred_diff, true_diff)
         loss_curr.retain_grad()
         loss_curr.backward()
+        eta_log.append(optlor.eta.detach().numpy())
 
         if check_grads:
             if it > 0:
@@ -88,20 +89,19 @@ if __name__ == '__main__':
                         print()
                 print('\n')
 
-        print('Iterarion {}'.format(it+1))
-        print('eta = \n{}'.format(optlor.eta.detach().numpy()))
-        eta_log.append(optlor.eta.detach().numpy())
-        print('loss = {:.3f}\n\n'.format(loss_curr))
-
         if np.linalg.norm(optlor.eta.grad.detach().numpy()) < tol:
             if not (eta_method == 'actual' and it < 1):
                 break
+                
+        print('Iterarion {}'.format(it+1))
+        print('eta = \n{}'.format(optlor.eta.detach().numpy()))
+        print('loss = {:.3f}\n'.format(loss_curr))
         
         loss_vec.append(loss_curr.detach().numpy())
 
+        print('eta grad = ')
         print(optlor.eta.grad)
-        # print(pred_diff)
-        # print(true_diff)
+        print('\n')
 
         if check_grads:
 
