@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2021.9.30)  9 MAR 2022 10:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2021.9.30)  11 MAR 2022 18:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -235,55 +235,50 @@ Write $\OML/cmm/m/it/12 m\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x\OT1/cmr/m/n/12 ) =
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
-Overfull \hbox (0.88986pt too wide) in paragraph at lines 120--121
-\OT1/cmr/m/n/12 data has been col-lected, among other con-trol-ling factors.$[]
-$However,
- []
-
-[4] [5] [6]
-<fn-unperturbed.png, id=36, 397.485pt x 264.99pt>
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5] [6]
+<fn-unperturbed.png, id=35, 397.485pt x 264.99pt>
 File: fn-unperturbed.png Graphic file (type png)
 <use fn-unperturbed.png>
-Package pdftex.def Info: fn-unperturbed.png  used on input line 192.
+Package pdftex.def Info: fn-unperturbed.png  used on input line 195.
 (pdftex.def)             Requested size: 272.99881pt x 182.00226pt.
- [7 <./fn-unperturbed.png>]
-<lorenz-unperturbed.png, id=43, 567.11874pt x 526.96875pt>
+
+[7 <./fn-unperturbed.png>]
+<lorenz-unperturbed.png, id=42, 567.11874pt x 526.96875pt>
 File: lorenz-unperturbed.png Graphic file (type png)
 <use lorenz-unperturbed.png>
-Package pdftex.def Info: lorenz-unperturbed.png  used on input line 212.
+Package pdftex.def Info: lorenz-unperturbed.png  used on input line 215.
 (pdftex.def)             Requested size: 350.99762pt x 326.15437pt.
- (./report.bbl [8 <./lorenz-unperturbed.png>]
+ [8 <./lorenz-unperturbed.png>] (./report.bbl
 Missing character: There is no Ã in font cmr12!
 Missing character: There is no ¼ in font cmr12!
- [9]) [10] (./report.aux) ) 
+)
+[9] (./report.aux) ) 
 Here is how much of TeX's memory you used:
- 2452 strings out of 494923
- 32282 string characters out of 6180742
+ 2448 strings out of 494923
+ 32244 string characters out of 6180742
  86003 words of memory out of 5000000
- 5726 multiletter control sequences out of 15000+600000
- 13921 words of font info for 53 fonts, out of 8000000 for 9000
+ 5724 multiletter control sequences out of 15000+600000
+ 13220 words of font info for 51 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 41i,9n,26p,1031b,240s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-ex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmti8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+ 41i,9n,26p,933b,240s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmb
+x12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbol
 s/msbm10.pfb>
-Output written on report.pdf (10 pages, 220220 bytes).
+Output written on report.pdf (9 pages, 210683 bytes).
 PDF statistics:
- 102 PDF objects out of 1000 (max. 8388607)
- 70 compressed objects within 1 object stream
+ 95 PDF objects out of 1000 (max. 8388607)
+ 65 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

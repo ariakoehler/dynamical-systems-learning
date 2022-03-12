@@ -34,6 +34,12 @@ J.~O. Ramsay, G.~Hooker, D.~Campbell, and J.~Cao.
 \newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
   Methodology)}, 69(5):741--796, 2007.
 
+\bibitem{chkrebtii}
+Oksana~A. Chkrebtii, David~A. Campbell, Ben Calderhead, and Mark~A. Girolami.
+\newblock {Bayesian Solution Uncertainty Quantification for Differential
+  Equations}.
+\newblock {\em Bayesian Analysis}, 11(4):1239 -- 1267, 2016.
+
 \bibitem{cockayne}
 Jon Cockayne, Chris~J. Oates, T.~J. Sullivan, and Mark Girolami.
 \newblock Bayesian probabilistic numerical methods.
@@ -47,11 +53,5 @@ Michael Bartholomew-Biggs, Steven Brown, Bruce Christianson, and Laurence
   124(1):171--190, 2000.
 \newblock Numerical Analysis 2000. Vol. IV: Optimization and Nonlinear
   Equations.
-
-\bibitem{chkrebtii}
-Oksana~A. Chkrebtii, David~A. Campbell, Ben Calderhead, and Mark~A. Girolami.
-\newblock {Bayesian Solution Uncertainty Quantification for Differential
-  Equations}.
-\newblock {\em Bayesian Analysis}, 11(4):1239 -- 1267, 2016.
 
 \end{thebibliography}

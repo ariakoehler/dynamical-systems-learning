@@ -117,9 +117,9 @@ Even more recently, Levine and Stuart (2021) use techniques from machine learnin
 
 \subsection{Uncertainty Quantification in Numerical Solutions of ODEs}
 
-In addition to finding the parameters of the dynamical systems we are interested in, we would also like to know the uncertainty associated with our estimates. This is mainly for the purpose of determining when the solution is ``found'' to within a specified tolerance. Techniques exist for determining worst-case error, but in practice the error estimates never reach below desired thresholds, leading to the need for other heuristics to determine when enough data has been collected, among other controlling factors.\cn However, precise knowledge of uncertainty can also used to better estimate the solution and parameters of the system when working under a Bayesian framework, as proposed in Chkrebtii, et al. (2016). However, this naturally requires the use of Bayesian methods, including Markov Chain Monte Carlo methods, which have a variety of problems that can arise, not the least of which that they are not guaranteed to converge, and that it can be difficult to tell when they have converged.
+While estimating the parameters of the ODEs themselves is a large part of this problem, it may also be useful to know how precise those estimates are. For example, Chkrebtii, et al. (2016) use a Bayesian method that conditions on model uncertainty in order to solve the system itself. They also use this model information to prove convergence properties of their algorithm, which could be challenging to show for other methods.\cite{chkrebtii} However, the use of Bayesian methods, especially ones which rely on MCMC, can lead to a variety of practical problems, as noted above.
 
-These problems are difficult to avoid, however, when quantifying uncertainty. Most current methods of uncertainty analysis require the use of Bayesian methods of solution, primarily because the posterior distribution of an estimated parameter typically comes packaged with a measure of variance. For example, Cockayne, et al. (2019) lays out a set of reasonable conditions under which the solution to a Dynamical Systems attained using Bayesian methods can give the average-case error\cite{cockayne}.
+These problems are difficult to avoid, however, when quantifying uncertainty. Most current methods of uncertainty analysis require the use of Bayesian methods, largely because the posterior distribution of an estimated parameter typically comes packaged with a measure of variance. For example, Cockayne, et al. (2019) lays out a set of reasonable conditions under which the solution to a Dynamical Systems attained using Bayesian methods can give the average-case error of the parameter estimates.\cite{cockayne}
 
 
 \section{Current Project}
@@ -153,9 +153,12 @@ Our main approach to learning the small parameters $\eta_{ij}$ of our model invo
 
 Any such backpropagation method relies upon a loss, which measures the fidelity of the estimated model to the true model. We will look at two choices.
 
-One such loss function considers the full numerical solution to the ODE with $\eta$ given and compares it to the full numerical solution of the true model. Define $$ L_1(f, f^*) = \| x(\eta) - x(\eta^*) \|^2_2, $$ where $x(\eta) \in \mathbb{R}^N$ is the numerical solution to the proposed model and $x(\eta^*) \in \mathbb{R}^N$ is the solution to the true model. This loss is intuitive but might not provide useful information when the proposed model's solution differs greatly from that of the true model.
+One such loss function considers the full numerical solution to the ODE with $\eta$ given and compares it to the full numerical solution of the true model. Define $$ L_1(f) = \| x(\eta^*) - x(\eta) \|^2_2, $$ where $x(\eta) \in \mathbb{R}^N$ is the numerical solution to the model given $\eta$. This loss is intuitive but might not provide useful information when the proposed model's solution differs greatly from that of the true model.
 
-One loss which might provide better information compares the \textit{diffs} $x^*$ to the per-time-step changes in the proposed model. Define $y^* \in \mathbb{R}^{N-1}$ such that $$ y^*_i = x^*_{i+1} - x^*_i,\, i = 1, \ldots , N-1, $$ and define $y \in \mathbb{R}^{N-1}$ according to $$ y_i = f_0(x_i) + m(x_i, \eta). $$ These are meant to capture the step-by-step change in the true solution and the predicted step-by-step change for a given $\eta$. Then let the new loss $$ L_2(f, f^*) = \| y^* - y \|^2_2. $$ This has a few advantages over $L_1$, including that it remains useful even if the predicted solution and the true solution behave very differently, as it only considers the change in state over short periods of time. It also does not require ever solving the proposed model, which makes the algorithm converge much faster.
+One loss which might provide better information compares the \textit{diffs} $x^*$ to the per-time-step changes in the proposed model. Define $y^* \in \mathbb{R}^{N-1}$ such that $$ y^*_i = x^*_{i+1} - x^*_i,\, i = 1, \ldots , N-1. $$  These are meant to capture the step-by-step change in the true solution. Then let the new loss $$ L_2(f) = \| y^* - m(x_i^*, \eta) \|^2_2. $$ This has a few advantages over $L_1$, including that it remains useful even if the predicted solution and the true solution behave very differently, as it only considers the change in state over short periods of time. It also does not require ever solving the proposed model, which makes the algorithm converge much faster.
+
+A third loss which we will consider resembles $L_2$ in that it depends upon diffs but considers the full solution of the problem for $\eta$ given. Define $y(\eta) \in \mathbb{R}^{N-1}$ according to $y(\eta)_i = f_0(x_i^*) + m(x_i^*, \eta)$. Then denote $$ L_3(f) = \| y^* - y(\eta) \|_2^2 $$
+
 
 %% One way of determining predictions and loss is to numerically solve the ODE for the current value of $\eta$ over the entire time domain and take the 2-norm of the difference with the given data, which in our case will be the solution of the system with the known value of $\eta^*$. We will label this $L: \mathbb{R}^{N \times d} \times \mathbb{R}^n \to \mathbb{R}$, defined by $$ L(x^*, \eta) = \| x^* - x_{\eta} \|^2, $$ where $x^*$ is a solution to $\dot{x}=f_0(x)+m^*(x,\eta^*)$ and $x$ is a solution to $\dot{x}=f_0(x)+m(x,\eta)$.
 
@@ -220,13 +223,9 @@ For choices of parameters $\sigma=10,\, \rho=28,\, \beta=\frac{8}{3}$, this prod
 \section{Results}
 
 
-\section{Future Directions}
 
-
-
-
+\pagebreak
 \bibliographystyle{unsrt}
-\nocite{*}
 \bibliography{dynsys}
 
 
