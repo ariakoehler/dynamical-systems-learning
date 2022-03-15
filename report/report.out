@@ -1,0 +1,15 @@
+\BOOKMARK [1][-]{section.1}{Notation}{}% 1
+\BOOKMARK [1][-]{section.2}{Introduction}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Direction}{section.2}% 3
+\BOOKMARK [1][-]{section.3}{Background}{}% 4
+\BOOKMARK [2][-]{subsection.3.1}{Parameter Estimation}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.2}{Uncertainty Quantification in Numerical Solutions of ODEs}{section.3}% 6
+\BOOKMARK [1][-]{section.4}{Current Project}{}% 7
+\BOOKMARK [1][-]{section.5}{Methodology}{}% 8
+\BOOKMARK [2][-]{subsection.5.1}{Backpropagation-Based Optimization}{section.5}% 9
+\BOOKMARK [2][-]{subsection.5.2}{Choice of Evaluation Criteria}{section.5}% 10
+\BOOKMARK [1][-]{section.6}{Sample Problems}{}% 11
+\BOOKMARK [2][-]{subsection.6.1}{Fitzhugh-Nagumo}{section.6}% 12
+\BOOKMARK [2][-]{subsection.6.2}{Lorenz 63}{section.6}% 13
+\BOOKMARK [1][-]{section.7}{Results}{}% 14
+\BOOKMARK [1][-]{section.8}{Additional Information}{}% 15
