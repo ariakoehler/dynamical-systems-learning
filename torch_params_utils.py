@@ -36,9 +36,7 @@ def L63_torch_modified_vec(t, S, eta, sigma=10.0, rho=28.0, beta=8.0/3):
 
 
 def make_predictions(t, x_true, optlor):
-    l63_fn = lambda t, x : L63_torch_modified(t, x, eta)
-    dt = torch.diff(t)
-    y_pred = optlor.forward(t, x_true)[:-1]
+    y_pred = optlor.forward(t, x_true)[:-1,:]
     return y_pred
 
 
