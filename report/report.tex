@@ -76,11 +76,11 @@
 
 \subsection{Direction}
 
-Dynamical Systems models have been used to great effect in a variety of different fields, and though analysis of these models is well-worn, some issues remain when it comes to comparing predictions by the model to real-world data.
+Dynamical systems models have been used to great effect in a variety of different fields. Though analysis of these models is well-worn, some issues remain when it comes to aligning the model to real-world data.
 
-First and foremost is the issue of parameter estimation. Though frameworks exist for estimating the parameters of a differential equation, the problem of minimizing 2-norm between a model's predictions and a given dataset is, in principle, ill-posed\cite{chung}. Thus, the problem of finding such a model still has challenges, even moreso for the problem of finding a model that is interpretable.
+One is the issue of parameter estimation. Though frameworks exist for estimating the parameters of a differential equation, the problem of minimizing 2-norm between a model's predictions and a given dataset is, in general, ill-posed\cite{chung}. Thus, the problem of finding a model that minimizes the 2-norm still has challenges, even moreso for the problem of finding a model that is interpretable.
 
-We look for an approximation $f$ that approximates $f^*$ optimally under some loss $L(f^*, f)$ (further details on the loss later), there are a few main sources of loss. The sources we want to focus on going forward are discretization error, model error, and ``true'' stochastic noise. In this paper, we will address the issue of model error, which is defined broadly to be the error in the predicted outcomes of a dynamical system due to misspecifying or underspecifying the dynamics governing the change in the state vector. For example, if one sets $\dot{x} = k x$, but in reality $\dot{x} = k x^2$, there is little hope to recover the ``real'' model through simply estimating the parameters of the chosen model.
+The problem is to find $f$ that approximates $f^*$ optimally under some loss $L(f^*, f)$ (further details on the loss later), there are a few main contributors to the model's overall loss. The sources of focus going forward are discretization error, model error, and ``true'' stochastic noise. In this paper, the issue of model error will be addressed. Model error is defined broadly to be the error in the predicted outcomes of a dynamical system due to misspecifying or underspecifying the dynamics governing the change in the state vector. For example, if one sets $\dot{x} = k x$, but in reality $\dot{x} = k x^2$, there is little hope to recover the ``true'' model by simply finding $k$.
 
 That is, consider a state vector $x$, which evolves according to $$\dot{x}(t, \eta^*) = f(x, \eta^*) \equiv f_0(x) + m^*(x, \eta^*),$$ and a given dynamical systems model $$\dot{x}(t) = f_0(x),$$ for which there is some \textit{a priori} reason to believe is a good model for the time-evolution of $x$. Then we wish to find $$f(x, \eta) = f_0(x) + m(x, \eta),$$ such that $L(f^*(x, \eta^*), f(x, \eta))$ is minimized.
 
@@ -137,7 +137,7 @@ If we consider the system describing the evolution of the state $x \in \mathbb{R
 
 
 
-\section{Methodology}
+\section{Methodology}\label{methodology}
 
 
 Our approach to the problem of estimating $\eta$ will leverage recent developments in the fields of machine learning and numerical optimization, in particular the \texttt{autograd} functionality of \texttt{torch}, which allows automatic computation of derivatives with respect to the parameters.\cite{biggs} Those derivatives can then be used to perform backpropagation in order to learn $\eta^*$ through iterated approximations $\eta$.
@@ -175,7 +175,7 @@ A third loss which we will consider resembles $L_2$ in that it depends upon diff
 
 
 
-\section{Sample Problems}
+\section{Sample Problems}\label{examples}
 
 We will focus on two systems primarily: the Fitzhugh-Nagumo system, which generally has stable behavior with respect to its parameters, and Lorenz-63 which exhibits chaotic behavior, which may make the task of learning $\eta$ much harder.
 
@@ -222,14 +222,37 @@ For choices of parameters $\sigma=10,\, \rho=28,\, \beta=\frac{8}{3}$, this prod
 
 \section{Results}
 
+The methods described in \ref{methodology} are applied to the two systems in \ref{examples} using the norms $L_1$, $L_2$, and $L_3$. The methods are then evaluated for convergence and runtime. As these methods are still a work in progress, evaluations will be based primarily upon qualitative behavior, rather than numerical evaluations of performance.
+
+
+\subsection{Fitzhugh-Nagumo}
+
+The Fitzhugh-Nagumo system exhibits oscillations for the chosen parameters and has stable behavior for small perturbations of its parameters.\cite{ramsay} However, perturbing the system with terms outside of the usual model is less well-understood. Thus, it will make a good test of how well the learning algorithm behaves in regions of parameter space where the function's behavior is not well-known.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{mse-fn.png}
+  \caption{Mean-Squared Error of the Fitzhugh-Nagumo model trained with different losses.}
+\end{figure}
 
 
 
+\subsection{Lorenz 63}
+
+The Lorenz-63 system is chosen to test the learning method presented primarily because of its chaotic dynamics. Though its chaotic attractor exists for a variety of parameter values, individual trajectories starting from the same initial point change drastically for slight changes in parameter values, making the task of guessing the effects due to small changes in parameters very difficult. Thus, if an algorithm learns perturbing terms reliably for the Lorenz system, it can be expected to do the same for most reasonable systems.
+
+
+
+\subsection{Conclusions}
+
+These results should be treated as preliminary and certainly not reflective of the full potential of the methods described in this report. There remains much tuning and reworking. For example, the $L_2$ loss appears to still have coding issues, as training with it with a better-tuned optimizer often causes it to converge to solutions that are neither optimal nor zero-gradient.
+
+However, these results do show that the methods we have proposed have promise. Under certain conditions and given enough time, the algorithm often converges to the correct value of $\eta$. Moving forward with the easy-to-compute $L_2$ and expanding the algorithm to include larger bases could produce a very powerful algorithm for learning the parameters of Dynamical Systems.
 
 
 \section{Additional Information}
 
-The code used to obtain the results above can be found at \url{https://github.com/carterkoehler/dynamical-systems-learning}
+The code used to obtain the results seen here can be found at \url{https://github.com/carterkoehler/dynamical-systems-learning}.
 
 
 

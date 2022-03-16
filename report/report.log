@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2021.9.30)  15 MAR 2022 10:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2021.9.30)  16 MAR 2022 17:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -332,38 +332,44 @@ Write $\OML/cmm/m/it/12 m\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x\OT1/cmr/m/n/12 ) =
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5] [6]
-<fn-unperturbed.png, id=122, 397.485pt x 264.99pt>
+<fn-unperturbed.png, id=134, 397.485pt x 264.99pt>
 File: fn-unperturbed.png Graphic file (type png)
 <use fn-unperturbed.png>
 Package pdftex.def Info: fn-unperturbed.png  used on input line 196.
 (pdftex.def)             Requested size: 272.99881pt x 182.00226pt.
 
 [7 <./fn-unperturbed.png>]
-<lorenz-unperturbed.png, id=131, 567.11874pt x 526.96875pt>
+<lorenz-unperturbed.png, id=143, 567.11874pt x 526.96875pt>
 File: lorenz-unperturbed.png Graphic file (type png)
 <use lorenz-unperturbed.png>
 Package pdftex.def Info: lorenz-unperturbed.png  used on input line 216.
 (pdftex.def)             Requested size: 350.99762pt x 326.15437pt.
- [8 <./lorenz-unperturbed.png>] (./report.bbl
+ [8 <./lorenz-unperturbed.png>]
+<mse-fn.png, id=153, 762.85pt x 512.91624pt>
+File: mse-fn.png Graphic file (type png)
+<use mse-fn.png>
+Package pdftex.def Info: mse-fn.png  used on input line 234.
+(pdftex.def)             Requested size: 350.99762pt x 235.99911pt.
+ [9 <./mse-fn.png>]
+[10] (./report.bbl
 Missing character: There is no Ã in font cmr12!
 Missing character: There is no ¼ in font cmr12!
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 243.
-
-[9]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 243.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 266.
+ [11]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 266.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 243.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 243.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 266.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 266.
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: D190EC6A41FC42A5483A2ABFDDDE83FF;902.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 243.
+(rerunfilecheck)             Checksum: E995566E3258916AA58F25C2277116ED;1087.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 266.
  ) 
 Here is how much of TeX's memory you used:
- 6051 strings out of 494923
- 86532 string characters out of 6180742
- 166972 words of memory out of 5000000
- 9273 multiletter control sequences out of 15000+600000
+ 6067 strings out of 494923
+ 86736 string characters out of 6180742
+ 167044 words of memory out of 5000000
+ 9282 multiletter control sequences out of 15000+600000
  13220 words of font info for 51 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  28i,9n,28p,933b,392s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -380,10 +386,10 @@ amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 sy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pf
 b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (9 pages, 215994 bytes).
+Output written on report.pdf (11 pages, 249561 bytes).
 PDF statistics:
- 200 PDF objects out of 1000 (max. 8388607)
- 169 compressed objects within 2 object streams
- 36 named destinations out of 1000 (max. 500000)
- 131 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 229 PDF objects out of 1000 (max. 8388607)
+ 194 compressed objects within 2 object streams
+ 42 named destinations out of 1000 (max. 500000)
+ 160 words of extra memory for PDF output out of 10000 (max. 10000000)
 
