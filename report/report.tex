@@ -1,7 +1,7 @@
 \documentclass[12pt]{article}
 
 \author{Carter Koehler\\{\small Advisor: Matthew Plumlee}}
-\title{Locating Error in Dynamical Systems}
+\title{Estimating Dynamical Systems Parameters with Autodifferentiation Methods}
 \date{03/19/2022}
 
 \usepackage{amsmath}
@@ -80,18 +80,17 @@ Dynamical systems models have been used to great effect in a variety of differen
 
 One is the issue of parameter estimation. Though frameworks exist for estimating the parameters of a differential equation, the problem of minimizing 2-norm between a model's predictions and a given dataset is, in general, ill-posed\cite{chung}. Thus, the problem of finding a model that minimizes the 2-norm still has challenges, even moreso for the problem of finding a model that is interpretable.
 
-The problem is to find $f$ that approximates $f^*$ optimally under some loss $L(f^*, f)$ (further details on the loss later), there are a few main contributors to the model's overall loss. The sources of focus going forward are discretization error, model error, and ``true'' stochastic noise. In this paper, the issue of model error will be addressed. Model error is defined broadly to be the error in the predicted outcomes of a dynamical system due to misspecifying or underspecifying the dynamics governing the change in the state vector. For example, if one sets $\dot{x} = k x$, but in reality $\dot{x} = k x^2$, there is little hope to recover the ``true'' model by simply finding $k$.
+The problem is to find $f$ such that the solution $x(\eta)$ of $\dot{x} = f(x,\eta)$ approximates the solution $x^*$ of $\dot{x}* = f^*(x)$ optimally under a given loss $L(x^*, x(\eta))$ (further details on the loss later). There are a few main contributors to the model's overall loss. The sources of focus going forward are discretization error, model error, and ``true'' stochastic noise. In this paper, the issue of model error will be addressed. Model error is defined broadly to be the error in the predicted outcomes of a dynamical system due to misspecifying or underspecifying the dynamics governing the change in the state vector. For example, if one sets $\dot{x} = k x$, but in reality $\dot{x} = k x^2$, there is little hope to recover the ``true'' model by simply finding $k$.
 
-That is, consider a state vector $x$, which evolves according to $$\dot{x}(t, \eta^*) = f(x, \eta^*) \equiv f_0(x) + m^*(x, \eta^*),$$ and a given dynamical systems model $$\dot{x}(t) = f_0(x),$$ for which there is some \textit{a priori} reason to believe is a good model for the time-evolution of $x$. Then we wish to find $$f(x, \eta) = f_0(x) + m(x, \eta),$$ such that $L(f^*(x, \eta^*), f(x, \eta))$ is minimized.
+That is, consider a vector-valued function $x$, which evolves according to $$\dot{x}(t) = f(x, \eta^*) \equiv f_0(x) + m^*(x),$$ defined on a discretized time grid $t_1, \ldots, t_N$ and a given dynamical systems model $f_0(x),$ for which there is some \textit{a priori} reason to believe is a good model for the time-evolution of $x$. Then the problem is to find $$f(x, \eta) = f_0(x) + m(x, \eta),$$ such that $L(x^*, x(\eta))$ is minimized.
 
-One of the advantages of this approach in the context of a general problem is the ability to make use of both domain knowledge\---through incorporation of the initial model $f_0$\---and data by way of learning $m(x)$\cite{levine}.
-
+One advantage of this approach in the context of a general problem is the ability to make use of both domain knowledge\---through incorporation of the initial model $f_0$\---and data by way of learning $m^*(x)$\cite{levine}.
 
 
 %% The problem we will focus on primarily is the issue of determining the sources of error in dynamical systems. If a proposed model gives us a certain quantity of error, how do we know what causes that error? Is it the result of unmodelled effects in the right-hand sides of our equations? If so, can we learn those effects given a search basis $\{ m_i\}_{i=1}^p$? How much error is coming from discretizing the time steps, and can we estimate that and try to account for it when making predictions? And last, how much of the error we see can we attribute to ``true'' noise or measurement error? Many attempts have been made, with more or less success, to address these issues, but few have attempted to look at these problems in a unified way and attempted to tackle the problem of uncertainty in dynamical systems as a single problem.
 
 
-These are very large issues, and we will not try to solve them all in this article, but we think that approaching them as a unified problem will provide useful ways of thinking as the field progresses.
+These are far-reaching issues, and we will not try to solve them all in this article, but we think that approaching them as a unified problem will provide useful ways of thinking as the field progresses.
 
 
 %% The dynamical systems we will look at concern the general system $$\dot{x}(t,\eta) = f(x;\eta).$$
@@ -103,15 +102,15 @@ These are very large issues, and we will not try to solve them all in this artic
 
 \subsection{Parameter Estimation}
 
-The first problem we are interested in is estimating $\eta^*$. That is, given $f(x,\eta)$ and a set of data $x^*_1, \ldots , x^*_N$, can an estimate of $\eta^*$ be obtained?
+The first problem to be considered is that of estimating parameters $\eta^*$. That is, given $f(x,\eta)$ and a set of data $x^*_1, \ldots , x^*_N$, can an estimate of $\eta^*$ be obtained?
 
-One such approach to this problem involves Bayesian statistical models, as in Gelman, et al. (1996). This approach begins with a prior distribution describing model parameters. The differential equations are then solved numerically under the given parameter values, and the prior distributions are updated according to a Bayesian update procedure. This approach has several advantages, in particular that it is able to account for hierarchical effects. In the particular problem considered, there are both population effects and individual effects, which can be considered at the same time with their hierarchical structure intact.\cite{gelman} However, this method also requires performing MCMC, which often fails to converge, and its convergence can almost never be verified.\cite{vehtari} Primarily for this reason, we will favor methods that do not involve performing MCMC.
+One such approach to this problem involves Bayesian statistical models, as in Gelman, et al. (1996). This approach begins with a prior distribution describing model parameters. The differential equations are then solved numerically under the given parameter values, and the prior distributions are updated according to a Bayesian update procedure. This approach has several advantages, in particular that it is able to account for hierarchical effects. In the particular problem considered, there are both population effects and individual effects, which can be considered at the same time with their hierarchical structure intact.\cite{gelman} However, this method also requires performing MCMC, which does not always converge in easily predictable ways, and its convergence can rarely be verified.\cite{vehtari} Primarily for this reason, we will favor methods that do not involve performing MCMC.
 
 %% Gelman, et al. (1996) addressed a particular instance of this problem in pharmacokinetics, using a hierarchical Bayesian approach. They began with a Bayesian prior describing the parameters of their model, under which they numerically solved the dynamical systems and then used the resulting error distributions to update their paramter distributions using MCMC methods. One advantage this gave them in their particular case was that it allowed them to jointly construct a population model and individual models by exploiting the hierarchical nature of Bayesian models.\cite{gelman} However, for a general problems their method has a litany of problems, including that there are not always obvious choices of prior, and the computation of posterior is not always tractable.
 
-More recently, the Bayesian approach for parameter estimation has fallen out of favor and been largely replaced by methods which rely on basis function expansions. Ramsay, et al. (2007), use one such method which treats the problem as a nested optimization. In an outer problem, they update the parameters, optimizing the Euclidean distance between their model predictions and observed data. The inner problem finds the coefficients for the basis functions which solve the differential equations for the current parameters.\cite{ramsay}
+More recently, the Bayesian approach for parameter estimation has fallen out of favor and been largely replaced by methods which rely on basis function expansions. Ramsay, et al. (2007), use one such method which treats the problem as a nested optimization. In an outer problem, updates are performed on the model parameters, optimizing the Euclidean distance between the model's predictions and observed data. The inner problem finds the coefficients for the basis functions which solve the differential equations for the current parameters.\cite{ramsay}
 
-Even more recently, Levine and Stuart (2021) use techniques from machine learning to predict unobserved states that may affect the observed state vector. Their methods are remarkably powerful and show additionally that starting with an educated guess of the true model can cause RNN predictions to reach optimality much faster than when they are given only data.\cite{levine} However, there are several questions that the authors do not answer. For example, it is not clear that these parameters are uniquely interpretable. The method might have terms that cancel each other, which could lead to very high parameter values, and the given model may be absorbed.
+Even more recently, Levine and Stuart (2021) use techniques from machine learning to predict unobserved states that may affect the observed state vector. The methods are remarkably powerful and show additionally that starting with an educated guess of the true model can cause RNN predictions to reach optimality much faster than when they are given only data.\cite{levine} However, there are several questions that the authors do not answer. For example, it is not clear that these parameters are uniquely interpretable. The method might have terms that cancel each other, which could lead to very high parameter values, and the given model may be absorbed.
 
 %% For example, how much uncertainty can we expect in these estimations in general? And how can we ensure that the parameters we discover, as well as our starting model, are uniquely meaningful, and that we do not just absorb the ``known'' model in our discovered model?
 
@@ -130,7 +129,11 @@ These problems are difficult to avoid, however, when quantifying uncertainty. Mo
 
 While the above is meant to give context for this project, the scope of this work is limited to reproducing some of the literature results and providing a proof of concept for future work.
 
-If we consider the system describing the evolution of the state $x \in \mathbb{R}^m$ according to the system $$\dot{x} = f(x,\eta).$$ where we further divide the right-hand side into the known part and the unknown part, say $f^*(x, \eta) = f_0(x) + m^*(x, \eta^*)$, where $f_0$ is assumed known, while $m^*$ and $\eta^*$ are fixed with $m^*$ small relative to $f_0$. Further assume that $m_j^*(x) = \sum_{i=1}^d \eta_{ij} m_i(x)$ is a superposition of known, elementary functions of $x$, scaled by the parameters in question, $\eta^*$ (future work will consider cases when $m^*$ is more complicated). Our goal is to learn the values of all the $\eta^*_{ij}$ through observing data generated by the perturbed system.  will write our approximations to the added model as $m(x,\eta)$, where for the current project $m$ can be assumed to be identical to $m^*$, and each $\eta_{ij}$ approximates the true $\eta^*_{ij}$.
+Consider the system describing the evolution of the vector-valued function $x: \mathbb{R} \times \mathbb{R}^{p \times d} \to \mathbb{R}^m$ according to the system $$\frac{d}{d t}x(t) = f(x,\eta),$$ where the right-hand side is further divided into the known part and the unknown part, $f(x) = f_0(x) + m(x, \eta)$, where $f_0$ is assumed known, while $m^*$ is fixed and small relative to $f_0$.
+
+Let $z(\eta) \in \mathbb{R}^{N \times m}$ be the numerical solution to the system $\dot{x}(\eta) = f(x,\eta)$ over a uniform time grid $t=t_1,\ldots, N$, and let $z^*$ be defined similarly for $\dot{x}(\eta) = f(x,\eta)$. Also let $\{m_i(x)\}_{i=1}^p$ be a set of elementary function and define the $j^{\text{th}}$ entry of $m(x)$ to be $m^j(x, \eta) = \sum_{i=1}^d \eta_{ij} m_i(x)$, a superposition of known, elementary functions of $x$, scaled by the parameters in question, $\eta^*$ (future work may consider cases when $m$ is more complicated). The goal then, is to find $\eta$ such that $L(z^*, z(\eta))$ is minimized.
+
+%% Our goal is to learn the values of all the $\eta^*_{ij}$ through observing data generated by the perturbed system.  will write our approximations to the added model as $m(x,\eta)$, where for the current project $m$ can be assumed to be identical to $m^*$, and each $\eta_{ij}$ approximates the true $\eta^*_{ij}$.
 
 %% We should note here, in order to justify our referring to $m^*$ as a perturbation, that we will assume $||f_0|| \gg ||m^*||$.
 
@@ -152,13 +155,13 @@ Our main approach to learning the small parameters $\eta_{ij}$ of our model invo
 
 \subsection{Choice of Evaluation Criteria}\label{norms}
 
-Any such backpropagation method relies upon a loss, which measures the fidelity of the estimated model to the true model. We will look at two choices.
+Any such backpropagation method relies upon a loss, which measures the fidelity of the estimated model to the true model. We will look at three choices.
 
-One such loss function considers the full numerical solution to the ODE with $\eta$ given and compares it to the full numerical solution of the true model. Define $$ L_1(f) = \| x(\eta^*) - x(\eta) \|^2_2, $$ where $x(\eta) \in \mathbb{R}^N$ is the numerical solution to the model given $\eta$. This loss is intuitive but might not provide useful information when the proposed model's solution differs greatly from that of the true model.
+One such loss function considers the full numerical solution to the ODE with $\eta$ given and compares it to the full numerical solution of the true model. Define $$ L_1(z^*, z(\eta)) = \frac{1}{N} \sum_{i=1}^N \|z_i^* - z(\eta)_i\|_2^2.$$ This loss is intuitive but might not provide useful information when the proposed model's solution differs greatly from that of the true model.
 
-One loss which might provide better information compares the \textit{diffs} $x^*$ to the per-time-step changes in the proposed model. Define $y^* \in \mathbb{R}^{N-1}$ such that $$ y^*_i = x^*_{i+1} - x^*_i,\, i = 1, \ldots , N-1. $$  These are meant to capture the step-by-step change in the true solution. Then let the new loss $$ L_2(f) = \| y^* - m(x_i^*, \eta) \|^2_2. $$ This has a few advantages over $L_1$, including that it remains useful even if the predicted solution and the true solution behave very differently, as it only considers the change in state over short periods of time. It also does not require ever solving the proposed model, which makes the algorithm converge much faster.
+One loss which might provide better information compares the differences of $x^*$ to the per-time-step changes in the proposed model. Define $y^* \in \mathbb{R}^{N-1}$ such that $$ y^*_i = z^*_{i+1} - z^*_i,\, i = 1, \ldots , N-1. $$  These are meant to capture the step-by-step change in the true solution. Then let the new loss $$ L_2(z^*, z(\eta)) = \frac{1}{N} \sum_{i=1}^N \| y^*_i - m(z_i^*, \eta) \|^2_2. $$ This has a few advantages over $L_1$, including that it remains useful even if the predicted solution and the true solution behave very differently, as it only considers the change in state over short periods of time. It also does not require ever solving the proposed model, which makes the algorithm converge much faster.
 
-A third loss which we will consider resembles $L_2$ in that it depends upon diffs but considers the full solution of the problem for $\eta$ given. Define $y(\eta) \in \mathbb{R}^{N-1}$ according to $y(\eta)_i = f_0(x_i^*) + m(x_i^*, \eta)$. Then denote $$ L_3(f) = \| y^* - y(\eta) \|_2^2 $$
+A third loss which we will consider resembles $L_2$ in that it depends upon diffs but considers the full solution of the problem for $\eta$ given. Define $y(\eta) \in \mathbb{R}^{N-1}$ according to $y^*_i = z(\eta)_{i+1} - z(\eta)_i,\, i = 1, \ldots , N-1$. Then denote $$ L_3(z^*, z(\eta)) = \frac{1}{N} \sum_{i=1}^N \|y^*_i - y(\eta)_i\|_2^2 $$
 
 
 %% One way of determining predictions and loss is to numerically solve the ODE for the current value of $\eta$ over the entire time domain and take the 2-norm of the difference with the given data, which in our case will be the solution of the system with the known value of $\eta^*$. We will label this $L: \mathbb{R}^{N \times d} \times \mathbb{R}^n \to \mathbb{R}$, defined by $$ L(x^*, \eta) = \| x^* - x_{\eta} \|^2, $$ where $x^*$ is a solution to $\dot{x}=f_0(x)+m^*(x,\eta^*)$ and $x$ is a solution to $\dot{x}=f_0(x)+m(x,\eta)$.
@@ -222,24 +225,49 @@ For choices of parameters $\sigma=10,\, \rho=28,\, \beta=\frac{8}{3}$, this prod
 
 \section{Results}
 
-The methods described in \ref{methodology} are applied to the two systems in \ref{examples} using the norms $L_1$, $L_2$, and $L_3$. The methods are then evaluated for convergence and runtime. As these methods are still a work in progress, evaluations will be based primarily upon qualitative behavior, rather than numerical evaluations of performance.
+The methods described in \ref{methodology} are applied to perturbed versions of the two systems in \ref{examples} using the norms $L_1$, $L_2$, and $L_3$. The methods are then evaluated for convergence and runtime. As these methods are still a work in progress, evaluations will be based primarily upon qualitative behavior, rather than numerical evaluations of performance.
 
 
 \subsection{Fitzhugh-Nagumo}
 
-The Fitzhugh-Nagumo system exhibits oscillations for the chosen parameters and has stable behavior for small perturbations of its parameters.\cite{ramsay} However, perturbing the system with terms outside of the usual model is less well-understood. Thus, it will make a good test of how well the learning algorithm behaves in regions of parameter space where the function's behavior is not well-known.
+The Fitzhugh-Nagumo system exhibits oscillations for the chosen parameters and has stable behavior for small perturbations of its parameters.\cite{ramsay} However, perturbing the system with terms outside of the usual model is less well-understood. Thus, it will make a good test of how well the learning algorithm behaves in regions of parameter space where the function's behavior is not well known.
+
+Taking $f_0$ to be the vector of right-hand side functions listed earlier, a basis of $[V^2, R^2]$ was chosen for the added terms so as to not overlap with terms already in the model. The ``true'' values were generated by numerically solving the system where $m^*(x)$ is defined as $m(x,\eta^*)$, and
+$\eta = \big[\begin{smallmatrix}
+  0.3 & 0\\
+  0   & 0.05
+  \end{smallmatrix}\big].$
+Choosing $m^*$ to be of the same form as $m$ has some advantages, including that it allows for confirmation when the algorithm recovers the actual model used to generate the ground truth, as opposed to simply an $\eta$ that works. The algorithm is then set to train for $100$ iterations or until it converges.
+
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.9\textwidth]{mse-fn.png}
-  \caption{Mean-Squared Error of the Fitzhugh-Nagumo model trained with different losses.}
+  \caption{Mean-Squared Error for learning the perturbed Fitzhugh-Nagumo model trained with different losses.}
 \end{figure}
+
+$100$ iterations is not long enough for any of these methods to converge, but it is enough to demonstrate that both $L_1$ and $L_3$ start decreasing the overall error and converging to the optimum rapidly. The $L_2$ loss behaves strangely and, looking forward to its long-term behavior, does not converge and eventually starts producing nonsense. This is likely due to errors in programming that will be fixed in the future. Nonetheless, the fact that the algorithm converges for this case is evidence that it is a powerful algorithm worth pursuing in future work.
 
 
 
 \subsection{Lorenz 63}
 
 The Lorenz-63 system is chosen to test the learning method presented primarily because of its chaotic dynamics. Though its chaotic attractor exists for a variety of parameter values, individual trajectories starting from the same initial point change drastically for slight changes in parameter values, making the task of guessing the effects due to small changes in parameters very difficult. Thus, if an algorithm learns perturbing terms reliably for the Lorenz system, it can be expected to do the same for most reasonable systems.
+
+Taking $f_0$ to be the vector of the right-hand side functions listed earlier, a basis of $[y z, x^2]$ was chosen for the added terms so as to not overlap with terms already in the model. Similarly to before, $m^*(x)$ is defined as $m(x,\eta^*)$, and
+$\eta = \big[\begin{smallmatrix}
+  0 & 0.003\\
+  0 & 0\\
+  0.005 & 0
+  \end{smallmatrix}\big].$
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{mse-l63.png}
+  \caption{Mean-Squared Error for learning the perturbed Lorenz 63 model trained with different losses.}
+\end{figure}
+
+The Lorenz system is in general much harder than other classical dynamical systems to apply numerical methods to, and these results are no exception. As mentioned previously, there is more work to be done in fully implementing the methods described in this paper, and the lack of convergence for any of these experiments is evidence that more methodological work may need to be done as well.
 
 
 
