@@ -108,16 +108,16 @@ One such approach to this problem involves Bayesian statistical models, as in Ge
 
 %% Gelman, et al. (1996) addressed a particular instance of this problem in pharmacokinetics, using a hierarchical Bayesian approach. They began with a Bayesian prior describing the parameters of their model, under which they numerically solved the dynamical systems and then used the resulting error distributions to update their paramter distributions using MCMC methods. One advantage this gave them in their particular case was that it allowed them to jointly construct a population model and individual models by exploiting the hierarchical nature of Bayesian models.\cite{gelman} However, for a general problems their method has a litany of problems, including that there are not always obvious choices of prior, and the computation of posterior is not always tractable.
 
-More recently, the Bayesian approach for parameter estimation has fallen out of favor and been largely replaced by methods which rely on basis function expansions. Ramsay, et al. (2007), use one such method which treats the problem as a nested optimization. In an outer problem, updates are performed on the model parameters, optimizing the Euclidean distance between the model's predictions and observed data. The inner problem finds the coefficients for the basis functions which solve the differential equations for the current parameters.\cite{ramsay}
+More recently, more methods have arisen which rely on basis function expansions. Ramsay, et al. (2007), use one such method which treats the problem as a nested optimization. In an outer problem, updates are performed on the model parameters, optimizing the Euclidean distance between the model's predictions and observed data. The inner problem finds the coefficients for the basis functions which solve the differential equations for the current parameters.\cite{ramsay}
 
-Even more recently, Levine and Stuart (2021) use techniques from machine learning to predict unobserved states that may affect the observed state vector. The methods are remarkably powerful and show additionally that starting with an educated guess of the true model can cause RNN predictions to reach optimality much faster than when they are given only data.\cite{levine} However, there are several questions that the authors do not answer. For example, it is not clear that these parameters are uniquely interpretable. The method might have terms that cancel each other, which could lead to very high parameter values, and the given model may be absorbed.
+Even more recently, Levine and Stuart (2021) use techniques from machine learning to predict unobserved states that may affect the observed state vector. The methods are remarkably powerful and show additionally that starting with an educated guess of the true model can cause RNN predictions to reach optimality much faster than when they are given only data.\cite{levine} However, there are several questions that the authors do not answer. For example, it is not clear that these parameters are uniquely interpretable. The method might have terms that cancel each other, and the given model may be absorbed in the estimated part.
 
 %% For example, how much uncertainty can we expect in these estimations in general? And how can we ensure that the parameters we discover, as well as our starting model, are uniquely meaningful, and that we do not just absorb the ``known'' model in our discovered model?
 
 
 \subsection{Uncertainty Quantification in Numerical Solutions of ODEs}
 
-While estimating the parameters of the ODEs themselves is a large part of this problem, it may also be useful to know how precise those estimates are. For example, Chkrebtii, et al. (2016) use a Bayesian method that conditions on model uncertainty in order to solve the system itself. They also use this model information to prove convergence properties of their algorithm, which could be challenging to show for other methods.\cite{chkrebtii} However, the use of Bayesian methods, especially ones which rely on MCMC, can lead to a variety of practical problems, as noted above.
+While estimating the parameters of the ODEs themselves is a large part of this problem, it may also be useful to know how precise those estimates are. For example, Chkrebtii, et al. (2016) use a Bayesian method that conditions on model uncertainty in order to solve the system itself. They also use a quantification of model information to prove convergence properties of their algorithm, which could be challenging to show for other methods.\cite{chkrebtii} However, the use of Bayesian methods can lead to a variety of practical problems which the proposed methods will try to avoid, as noted above.
 
 These problems are difficult to avoid, however, when quantifying uncertainty. Most current methods of uncertainty analysis require the use of Bayesian methods, largely because the posterior distribution of an estimated parameter typically comes packaged with a measure of variance. For example, Cockayne, et al. (2019) lays out a set of reasonable conditions under which the solution to a Dynamical Systems attained using Bayesian methods can give the average-case error of the parameter estimates.\cite{cockayne}
 
@@ -286,7 +286,7 @@ The code used to obtain the results seen here can be found at \url{https://githu
 
 
 
-\pagebreak
+%% \pagebreak
 \bibliographystyle{unsrt}
 \bibliography{dynsys}
 
